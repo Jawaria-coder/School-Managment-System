@@ -7,13 +7,13 @@ This system helps manage students, teachers, staff, courses, grades, fees, and l
 
 ## ✨ Features
 
-- 👨‍🎓 **Student Management** – Add, update, delete, and search student records.  
-- 👩‍🏫 **Teacher Management** – Manage teacher details and their assigned courses.  
-- 📚 **Library Management** – Keep track of books and borrowing history.  
-- 💰 **Fee Management** – Store and manage student fee records.  
-- 🏢 **Staff Management** – Junior staff and other school employees.  
-- 📊 **Grades & Courses** – Manage courses and student grades.  
-- 🎨 **JavaFX GUI** – Simple and user-friendly graphical interface.
+-  **Student Management** : Add, update, delete, and search student records.  
+-  **Teacher Management** : Manage teacher details and their assigned courses.  
+-  **Library Management** : Keep track of books and borrowing history.  
+-  **Fee Management** : Store and manage student fee records.  
+-  **Staff Management** : Junior staff and other school employees.  
+-  **Grades & Courses** : Manage courses and student grades.  
+-  **JavaFX GUI** : Simple and user-friendly graphical interface.
 
 ---
 
