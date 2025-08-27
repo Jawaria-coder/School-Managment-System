@@ -1,0 +1,15 @@
+Name: Mirha
+Age: 13
+ID: 90
+CNIC: 1234567
+Gender: Female
+Contact Info: 98765432
+Email: mirha@gmail.com
+Address: hbfc
+Father Name: ahsan
+Mother Name: shazad
+Father Contact: 2345678765
+Mother Contact: 98765433
+Father Business: Business
+Father Income: 500000.0
+Father Email: ahsan@gmail.com
