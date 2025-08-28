@@ -5,7 +5,7 @@ This system helps manage students, teachers, staff, courses, grades, fees, and l
 
 ---
 
-## ✨ Features
+##  Features
 
 -  **Student Management** : Add, update, delete, and search student records.  
 -  **Teacher Management** : Manage teacher details and their assigned courses.  
@@ -17,7 +17,7 @@ This system helps manage students, teachers, staff, courses, grades, fees, and l
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Java** (OOP Concepts)
 - **JavaFX** (GUI)
@@ -26,7 +26,7 @@ This system helps manage students, teachers, staff, courses, grades, fees, and l
 
 ---
 
-## 🚀 How to Run
+##  How to Run
 
 1. Clone the repository:
    ```bash
