@@ -24,6 +24,15 @@ public class Person implements Serializable {
         this.email = email;
         this.address = address;
     }
+
+    public long getContact_info() {
+        return contact_info;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
     public String getName() {
         return name;
     }

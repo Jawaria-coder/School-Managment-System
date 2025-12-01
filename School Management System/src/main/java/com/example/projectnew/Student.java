@@ -10,13 +10,37 @@ public class Student extends Person implements Serializable {
     private long mother_contact;
     private String father_business;
     private double father_income;
+
+    public String getFather_name() {
+        return father_name;
+    }
+
+    public String getMother_name() {
+        return mother_name;
+    }
+
+    public long getFather_contact() {
+        return father_contact;
+    }
+
+    public long getMother_contact() {
+        return mother_contact;
+    }
+
+    public String getFather_business() {
+        return father_business;
+    }
+
+    public String getFather_email() {
+        return father_email;
+    }
+
     private String father_email;
     private ArrayList<Course1> courses;
-    private boolean isNewStudent;
 
     public Student(String name, int age, int id, long cnic, boolean gender, long contact_info, String email, String address,
                    String father_name, String mother_name, long father_contact, long mother_contact, String father_business,
-                   double father_income, String father_email, boolean isNewStudent) {
+                   double father_income, String father_email) {
         super(name, age, id, cnic, gender, contact_info, email, address);
         this.father_name = father_name;
         this.mother_name = mother_name;
@@ -25,13 +49,9 @@ public class Student extends Person implements Serializable {
         this.father_business = father_business;
         this.father_income = father_income;
         this.father_email = father_email;
-        this.isNewStudent = isNewStudent;
         this.courses = new ArrayList<Course1>();
     }
 
-    public boolean isNewStudent() {
-        return isNewStudent;
-    }
 
     public ArrayList<Course1> getCourses() {
         return courses;

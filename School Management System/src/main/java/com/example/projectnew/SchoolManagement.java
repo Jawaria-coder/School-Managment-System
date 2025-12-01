@@ -1,6 +1,7 @@
 package com.example.projectnew;
 
 import javafx.application.Application;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -11,9 +12,11 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -55,146 +58,158 @@ public class SchoolManagement extends Application {
     }
 
     private void setMainScene(Stage stage) throws Exception {
-
+        // --- Logo ---
         Image image = new Image(getClass().getResource("/logo.png").toExternalForm());
-        System.out.println("Image error? " + image.isError());
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(150);
         imageView.setFitHeight(150);
 
+        // --- Labels ---
+        Label schoolName = new Label("THE FAITH SCHOOL");
+        schoolName.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        schoolName.setTextFill(Color.DARKBLUE);
 
+        Label campusName = new Label("PALM TREE CAMPUS");
+        campusName.setFont(Font.font("Arial", FontWeight.BOLD, 22));
+        campusName.setTextFill(Color.DARKBLUE);
 
-        Label label1 = new Label("THE FAITH SCHOOL");
-        Label label2 = new Label("PALM TREE CAMPUS");
-        label1.setTextFill(Color.BLACK);
-        label2.setTextFill(Color.BLACK);
-        stage.setTitle("School Management System");
-        Label label = new Label("Choose an option:");
-        label.setTextFill(Color.BLACK);
+        Label instruction = new Label("Select a Management Section:");
+        instruction.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        instruction.setTextFill(Color.BLACK);
+
+        // --- Buttons ---
         Button studentButton = new Button("Student Management");
-        Button staffButton =  new Button("Staff Management");
+        Button staffButton = new Button("Staff Management");
         Button libraryButton = new Button("Library Management");
-        studentButton.setPrefSize(160,100);
-        staffButton.setPrefSize(160,100);
-        libraryButton.setPrefSize(160,100);
-        studentButton.setFont(Font.font("Times New Roman", FontWeight.BOLD,15));
-        studentButton.setStyle("-fx-background-color: #000000;");
-        studentButton.setTextFill(Color.WHITE);
-        staffButton.setFont(Font.font("Times New Roman", FontWeight.BOLD,15));
-        staffButton.setStyle("-fx-background-color: #000000;");
-        staffButton.setTextFill(Color.WHITE);
-        libraryButton.setFont(Font.font("Times New Roman", FontWeight.BOLD,15));
-        libraryButton.setStyle("-fx-background-color: #000000;");
-        libraryButton.setTextFill(Color.WHITE);
 
-        GridPane pane1 = new GridPane();
-        pane1.setAlignment(Pos.TOP_CENTER);
-        pane1.setVgap(5);
-        pane1.setHgap(5);
-        label1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        label2.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 18));
+        studentButton.setPrefSize(200, 60);
+        staffButton.setPrefSize(200, 60);
+        libraryButton.setPrefSize(200, 60);
 
-        HBox hb = new HBox();
-        HBox hb1 = new HBox();
-        HBox hb2 = new HBox();
-        HBox hb3 = new HBox();
-        HBox hb4 = new HBox();
-        hb4.getChildren().addAll(imageView);
-        hb1.getChildren().addAll(label1);
-        hb2.getChildren().addAll(label2);
-        hb3.getChildren().addAll(label);
-        hb1.setAlignment(Pos.CENTER);
-        hb2.setAlignment(Pos.CENTER);
-        hb3.setAlignment(Pos.CENTER);
-        hb4.setAlignment(Pos.CENTER);
-        hb.getChildren().addAll(studentButton,staffButton,libraryButton);
-        hb.setSpacing(5);
-        hb.setAlignment(Pos.CENTER);
-        VBox vb = new VBox();
-        VBox.setMargin(hb4, new Insets(100, 0, 0, 0)); // top=20px, right=0, bottom=0, left=0
-        vb.getChildren().addAll(hb4,hb1,hb2,hb3,hb);
-        vb.setAlignment(Pos.CENTER);
-        vb.setSpacing(5);
+        studentButton.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        staffButton.setFont(Font.font("Arial", FontWeight.BOLD, 16));
+        libraryButton.setFont(Font.font("Arial", FontWeight.BOLD, 16));
 
-        pane1.add(vb, 0,0);
-        setBackgroundColor(pane1);
+        studentButton.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        staffButton.setStyle("-fx-background-color: darkgreen; -fx-text-fill: white;");
+        libraryButton.setStyle("-fx-background-color: darkred; -fx-text-fill: white;");
 
+        // --- Button actions ---
+        studentButton.setOnAction(sb -> StudentLogin(stage));
+        staffButton.setOnAction(st -> StaffLogin(stage));
+        libraryButton.setOnAction(lib -> LibraryLogin(stage));
 
-        studentButton.setOnAction(sb -> {
-            StudentLogin(stage);
-        });
+        // --- Layouts ---
+        VBox logoBox = new VBox(imageView);
+        logoBox.setAlignment(Pos.CENTER);
+        logoBox.setPadding(new Insets(30, 0, 20, 0));
 
-        staffButton.setOnAction(st -> {
-            StaffLogin(stage);
-        });
+        VBox titleBox = new VBox(schoolName, campusName);
+        titleBox.setAlignment(Pos.CENTER);
+        titleBox.setSpacing(5);
 
-        libraryButton.setOnAction(lib -> {
-            LibraryLogin(stage);
-        });
+        VBox buttonBox = new VBox(studentButton, staffButton, libraryButton);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setSpacing(20);
+        buttonBox.setPadding(new Insets(40, 0, 0, 0));
 
-        mainScene = new Scene(pane1, 700, 700);
+        VBox mainLayout = new VBox(logoBox, titleBox, instruction, buttonBox);
+        mainLayout.setAlignment(Pos.TOP_CENTER);
+        mainLayout.setSpacing(20);
+        mainLayout.setPadding(new Insets(20));
+        mainLayout.setStyle("-fx-background-color: #f0f8ff;");
+
+        mainScene = new Scene(mainLayout, 700, 700);
     }
-    private void createLoginLayout(Stage stage, String title, String correctUsername, String correctPassword, Scene nextScene) {
-        Label mainLabel = new Label(title);
-        Label administratorLogin = new Label("Administrator Login");
-        Label username = new Label("Username");
-        TextField usernameText = new TextField();
-        Label password = new Label("Password");
+
+    private void createLoginLayout(Stage stage, String title, String correctUsername, String correctPassword, Runnable nextSceneAction) {
+        // ------------------ Labels ------------------
+        Label heading = new Label(title + " Login");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
+
+        Label instruction = new Label("Enter your credentials to continue:");
+        instruction.setFont(Font.font(16));
+
+        Label usernameLabel = new Label("Username:");
+        usernameLabel.setFont(Font.font("Arial", 16));
+        TextField usernameField = new TextField();
+        usernameField.setPrefWidth(200);
+
+        Label passwordLabel = new Label("Password:");
+        passwordLabel.setFont(Font.font("Arial", 16));
         PasswordField passwordField = new PasswordField();
+        passwordField.setPrefWidth(200);
+
+        // ------------------ Buttons ------------------
         Button loginButton = new Button("Login");
-        Button back = new Button("Back");
+        loginButton.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        loginButton.setPrefWidth(140);
 
-        GridPane pane = new GridPane();
-        pane.setAlignment(Pos.CENTER);
-        pane.setVgap(5);
-        pane.setHgap(5);
+        Button backButton = new Button("Back");
+        backButton.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        backButton.setPrefWidth(140);
 
-        pane.add(mainLabel,3,7);
-        pane.add(administratorLogin, 3, 8);
-        pane.add(username, 3, 9);
-        pane.add(usernameText, 3, 10);
-        pane.add(password, 3, 11);
-        pane.add(passwordField, 3, 12);
-        pane.add(loginButton, 3, 13);
-        pane.add(back,4,13);
+        HBox buttonBox = new HBox(20, loginButton, backButton);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        mainLabel.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        administratorLogin.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        username.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
-        password.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
-        loginButton.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
-        back.setFont(Font.font("Times New Roman", FontWeight.BOLD, 15));
+        // ------------------ Feedback ------------------
+        Label feedback = new Label();
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setWrapText(true);
+        feedback.setTextAlignment(TextAlignment.CENTER);
+        feedback.setMaxWidth(350);
 
+        // ------------------ Layout ------------------
+        GridPane formGrid = new GridPane();
+        formGrid.setAlignment(Pos.CENTER);
+        formGrid.setHgap(10);
+        formGrid.setVgap(15);
+        formGrid.add(usernameLabel, 0, 0);
+        formGrid.add(usernameField, 1, 0);
+        formGrid.add(passwordLabel, 0, 1);
+        formGrid.add(passwordField, 1, 1);
+
+        VBox layout = new VBox(25, heading, instruction, formGrid, buttonBox, feedback);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        Scene loginScene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(loginScene);
+
+        // ------------------ Actions ------------------
         loginButton.setOnAction(event -> {
-            String enteredUsername = usernameText.getText();
+            String enteredUsername = usernameField.getText();
             String enteredPassword = passwordField.getText();
 
             if (enteredUsername.equals(correctUsername) && enteredPassword.equals(correctPassword)) {
-                stage.setScene(nextScene);
-                displaySuccessMessage();
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText("Login successful!");
+                nextSceneAction.run();  // call the appropriate scene creation
             } else {
-                displayAlert();
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Username or password is incorrect.");
             }
         });
-        logout(back,stage);
 
-        Scene loginScene = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
-        stage.setScene(loginScene);
-        stage.show();
+        logout(backButton, stage);
     }
+
     private void StudentLogin(Stage stage) {
-        createLoginLayout(stage, "Student Management", "Jawaria", "jaw", studentscene);
+        createLoginLayout(stage, "Student Management", "Jiya@gmail.com", "jaw12345", () -> Studentscene(stage));
     }
 
     private void StaffLogin(Stage stage) {
-        createLoginLayout(stage, "Staff Management", "Eesha", "eesha12", staffscene);
+        createLoginLayout(stage, "Staff Management", "Eesha@gmail.com", "eesha12345", () -> Staffscene(stage));
     }
 
     private void LibraryLogin(Stage stage) {
-        createLoginLayout(stage, "Library Management", "Faiza", "faiza2", libraryscene);
+        createLoginLayout(stage, "Library Management", "Faiza@gmail.com", "faiza12345", () -> LibraryScene(stage));
     }
+
 
     private void displaySuccessMessage() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -212,1504 +227,1743 @@ public class SchoolManagement extends Application {
         alert.showAndWait();
     }
 
+    // ------------------ Staff Management Scene ------------------
     private void Staffscene(Stage stage) {
-        GridPane pane2 = new GridPane();
+        Label heading = new Label("Staff Management");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
+
+        Label instruction = new Label("Choose an option:");
+        instruction.setFont(Font.font(16));
+
         ComboBox<String> choice = new ComboBox<>();
-        String arr[] = {"1. Add a Teacher", "2. Remove a Teacher",
-                "3. Add Junior Staff", "4. Remove Junior Staff", "5. Calculate Salary of a Teacher",
-                "6. Calculate Salary of a Junior Staff", "7. Update Teacher Information", "8. Display Teachers Information.",
-                "9. Display Junior Staffs Information.", "10. Display Principle"};
+        choice.getItems().addAll(
+                "1. Add a Teacher", "2. Remove a Teacher",
+                "3. Add Junior Staff", "4. Remove Junior Staff",
+                "5. Calculate Salary of a Teacher", "6. Calculate Salary of a Junior Staff",
+                "7. Update Teacher Information", "8. Display Teachers Information.",
+                "9. Display Junior Staffs Information.", "10. Display Principle"
+        );
+        choice.setPrefWidth(350);
 
-        Label label = new Label("Choose an option:");
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        choice.getItems().addAll(arr);
-        Label staffManagement1 = new Label("Staff Management");
-        pane2.add(label, 0, 1);
-        pane2.add(staffManagement1, 1, 0);
-        staffManagement1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setVgap(10);
-        pane2.setHgap(10);
-        pane2.setAlignment(Pos.CENTER);
+        Button submit = new Button("Submit");
+        submit.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        submit.setPrefWidth(140);
+        Button logoutBtn = new Button("Log Out");
+        logoutBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        logoutBtn.setPrefWidth(140);
 
-        Button b1 = new Button("Submit");
-        Button back = new Button("Log Out");
-        pane2.add(back,3,4);
-        pane2.add(b1, 2, 4);
-        pane2.add(choice, 1, 1);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
-        setBackgroundColor(pane2);
-        staffscene = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
+        HBox buttons = new HBox(20, submit, logoutBtn);
+        buttons.setAlignment(Pos.CENTER);
 
-        b1.setOnAction(a -> {
-            selectedChoice = choice.getValue();
-            if (selectedChoice != null) {
-                if (selectedChoice.equals("1. Add a Teacher")) {
-                    addTeacher(stage);
-                } else if (selectedChoice.equals("2. Remove a Teacher")) {
-                    removeTeacher(stage);
-                } else if (selectedChoice.equals("3. Add Junior Staff")) {
-                    addJuniorStaff(stage);
-                } else if (selectedChoice.equals("4. Remove Junior Staff")) {
-                    removeJuniorStaff(stage);
-                }  else if (selectedChoice.equals("5. Calculate Salary of a Teacher")) {
-                    calculateSalaryOfTeacher(stage);
-                } else if (selectedChoice.equals("6. Calculate Salary of a Junior Staff")) {
-                    calculateSalaryOfJuniorStaff(stage);
-                } else if (selectedChoice.equals("7. Update Teacher Information")) {
-                    UpdatingTeacherInfo(stage);
-                } else if (selectedChoice.equals("8. Display Teachers Information.")) {
-                    displayTeacherInfo(stage);
-                } else if (selectedChoice.equals("9. Display Junior Staffs Information.")) {
-                    displayJuniorStaffInfo(stage);
-                } else if (selectedChoice.equals("10. Display Principle")) {
-                    displayPrincipleInfo(stage);
-                }
+        VBox layout = new VBox(25, heading, instruction, choice, buttons);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        staffscene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(staffscene);
+
+        submit.setOnAction(a -> {
+            String selected = choice.getValue();
+            if (selected == null) return;
+            switch (selected) {
+                case "1. Add a Teacher" -> addTeacher(stage);
+                case "2. Remove a Teacher" -> removeEntity(stage, "Remove Teacher", "teacher");
+                case "3. Add Junior Staff" -> addJuniorStaff(stage);
+                case "4. Remove Junior Staff" -> removeEntity(stage, "Remove Junior Staff", "junior");
+                case "5. Calculate Salary of a Teacher" -> calculateSalaryOfTeacher(stage);
+                case "6. Calculate Salary of a Junior Staff" -> calculateSalaryOfJuniorStaff(stage);
+                case "7. Update Teacher Information" -> UpdatingTeacherInfo(stage);
+                case "8. Display Teachers Information." -> displayTeacherInfo(stage);
+                case "9. Display Junior Staffs Information." -> displayJuniorStaffInfo(stage);
+                case "10. Display Principle" -> displayPrincipleInfo(stage);
             }
         });
-        logout(back,stage);
+
+        logout(logoutBtn, stage);
     }
+
+    // ------------------ Student Management Scene ------------------
     private void Studentscene(Stage stage) {
+        Label heading = new Label("Student Management");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        GridPane pane2 = new GridPane();
+        Label instruction = new Label("Choose an option:");
+        instruction.setFont(Font.font(16));
 
-        ComboBox<String> choice2 = new ComboBox<>();
-        String ar[] = {"1. Admit a Student", "2. Remove a Student", "3. Display Fee of Student.", "4. Display ScholarShip.",
-                "5. Assign Courses", "6. View Assigned Courses", "7. See Result", "8. Update Student Information",
-                "9. Display Students Information."};
+        ComboBox<String> choice = new ComboBox<>();
+        choice.getItems().addAll(
+                "1. Admit a Student", "2. Remove a Student", "3. Display Fee of Student.",
+                "4. Display ScholarShip.", "5. Assign Courses", "6. View Assigned Courses",
+                "7. See Result", "8. Update Student Information", "9. Display Students Information."
+        );
+        choice.setPrefWidth(350);
 
-        choice2.getItems().addAll(ar);
-        Label label = new Label("Choose an option:");
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        Label studentManagement1 = new Label("Student Management");
-        studentManagement1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.CENTER);
+        Button submit = new Button("Submit");
+        submit.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        submit.setPrefWidth(140);
+        Button logoutBtn = new Button("Log Out");
+        logoutBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        logoutBtn.setPrefWidth(140);
 
-        pane2.add(label, 0, 1);
-        pane2.add(studentManagement1, 1, 0);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        HBox buttons = new HBox(20, submit, logoutBtn);
+        buttons.setAlignment(Pos.CENTER);
 
-        Button b1 = new Button("Submit");
-        Button back = new Button("Log Out");
-        pane2.add(back,3,4);
-        pane2.add(b1, 2, 4);
-        pane2.add(choice2, 1, 1);
-        setBackgroundColor(pane2);
-        studentscene = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
+        VBox layout = new VBox(25, heading, instruction, choice, buttons);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        b1.setOnAction(a ->
-        {
-            selectedChoice1 = choice2.getValue();
+        studentscene = new Scene(layout, 700, 700); // assign to class variable
+        setBackgroundColor(layout);
+        stage.setScene(studentscene);
 
-            if (selectedChoice1 != null) {
-                // Handle the second set of choices
-                if (selectedChoice1.equals("1. Admit a Student")) {
-                    admitStudent(stage);
-                }if (selectedChoice1.equals("2. Remove a Student")) {
-                    removeStudent(stage);
-                } if (selectedChoice1.equals("3. Display Fee of Student.")) {
-                    displayFee(stage);
-                } if (selectedChoice1.equals("4. Display ScholarShip.")) {
-                    seeScholarship(stage);
-                } if (selectedChoice1.equals("5. Assign Courses")) {
-                    assignCourses(stage);
-                }  if (selectedChoice1.equals("6. View Assigned Courses")) {
-                    viewAssignedCourses(stage);
-                }  if (selectedChoice1.equals("7. See Result")) {
-                    seeResult(stage);
-                }  if (selectedChoice1.equals("8. Update Student Information")) {
-                    UpdateStudentInformation(stage);
-                }  if (selectedChoice1.equals("9. Display Students Information.")) {
-                    displayStudentInfo(stage);
-                }
+        submit.setOnAction(a -> {
+            String selected = choice.getValue();
+            if (selected == null) return;
+            switch (selected) {
+                case "1. Admit a Student" -> admitStudent(stage);
+                case "2. Remove a Student" -> removeEntity(stage, "Remove Student", "student");
+                case "3. Display Fee of Student." -> displayFee(stage);
+                case "4. Display ScholarShip." -> seeScholarship(stage);
+                case "5. Assign Courses" -> assignCourses(stage);
+                case "6. View Assigned Courses" -> viewAssignedCourses(stage);
+                case "7. See Result" -> seeResult(stage);
+                case "8. Update Student Information" -> UpdateStudentInformation(stage);
+                case "9. Display Students Information." -> displayStudentInfo(stage);
             }
         });
-        logout(back,stage);
+
+
+
+        logout(logoutBtn, stage);
     }
+
+    // ------------------ Library Management Scene ------------------
     private void LibraryScene(Stage stage) {
-        GridPane pane2 = new GridPane();
-        ComboBox<String> choice3 = new ComboBox<>();
-        String arr[] = {"1. Add a book" , "2. Assign a book", "3. Return a book",
-                "4. Display Books", "5. Display Checked Out Books"};
+        Label heading = new Label("Library Management");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label label = new Label("Choose an option:");
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 20));
-        choice3.getItems().addAll(arr);
-        Label staffManagement1 = new Label("Library Management");
-        pane2.add(label, 0, 1);
-        pane2.add(staffManagement1, 1, 0);
-        staffManagement1.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setVgap(10);
-        pane2.setHgap(10);
-        pane2.setAlignment(Pos.CENTER);
+        Label instruction = new Label("Choose an option:");
+        instruction.setFont(Font.font(16));
 
-        Button b1 = new Button("Submit");
-        Button back = new Button("Log Out");
-        pane2.add(back,3,4);
-        pane2.add(b1, 2, 4);
-        pane2.add(choice3, 1, 1);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
-        setBackgroundColor(pane2);
-        libraryscene = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
+        ComboBox<String> choice = new ComboBox<>();
+        choice.getItems().addAll(
+                "1. Add a book", "2. Assign a book", "3. Return a book",
+                "4. Display Books", "5. Display Checked Out Books"
+        );
+        choice.setPrefWidth(350);
 
-        b1.setOnAction(a -> {
-            selectedChoice2 = choice3.getValue();
-            if (selectedChoice2 != null) {
-                if (selectedChoice2.equals("1. Add a book")) {
-                    addBook(stage);
-                } else if (selectedChoice2.equals("2. Assign a book")) {
-                    assignBook(stage);
-                } else if (selectedChoice2.equals("3. Return a book")) {
-                    returnBook(stage);
-                } else if (selectedChoice2.equals("4. Display Books")) {
-                    displayAvailableBooks(stage);
-                } else if (selectedChoice2.equals("5. Display Checked Out Books")) {
-                    displayCheckedOutBooks(stage);
-                }
+        Button submit = new Button("Submit");
+        submit.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        submit.setPrefWidth(140);
+        Button logoutBtn = new Button("Log Out");
+        logoutBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        logoutBtn.setPrefWidth(140);
+
+        HBox buttons = new HBox(20, submit, logoutBtn);
+        buttons.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(25, heading, instruction, choice, buttons);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        libraryscene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(libraryscene);
+
+        submit.setOnAction(a -> {
+            String selected = choice.getValue();
+            if (selected == null) return;
+            switch (selected) {
+                case "1. Add a book" -> addBook(stage);
+                case "2. Assign a book" -> assignBook(stage);
+                case "3. Return a book" -> returnBook(stage);
+                case "4. Display Books" -> displayAvailableBooks(stage);
+                case "5. Display Checked Out Books" -> displayCheckedOutBooks(stage);
             }
         });
-        logout(back,stage);
+
+        logout(logoutBtn, stage);
     }
-    public void logout(Button logout, Stage stage)
-    {
-        logout.setOnAction(l -> {
-            stage.setScene(mainScene);
-        });
+
+    // ------------------ Logout ------------------
+    public void logout(Button logout, Stage stage) {
+        logout.setOnAction(l -> stage.setScene(mainScene));
     }
+
     public void admitStudent(Stage stage) {
-        Label l = new Label("Add Student:");
-        Label l1 = new Label("Name");
-        TextField text1 = new TextField();
-        Label l2 = new Label("Age");
-        TextField text2 = new TextField();
-        Label l3 = new Label("id");
-        TextField text3 = new TextField();
-        Label l4 = new Label("Cnic");
-        TextField text4 = new TextField();
-        Label l5 = new Label("Gender");
-        RadioButton r1 = new RadioButton("Male");
-        RadioButton r2 = new RadioButton("Female");
-        ToggleGroup tg = new ToggleGroup();
-        r1.setToggleGroup(tg);
-        r2.setToggleGroup(tg);
-        Label l6 = new Label("Contact Info");
-        TextField text6 = new TextField();
-        Label l7 = new Label("Email");
-        TextField text7 = new TextField();
-        Label l8 = new Label("Address");
-        TextField text8 = new TextField();
-        Label l9 = new Label("Father Name");
-        TextField text9 = new TextField();
-        Label l10 = new Label("Mother Name");
-        TextField text10 = new TextField();
-        Label l11 = new Label("Father Contact");
-        TextField text11 = new TextField();
-        Label l12 = new Label("Mother Contact");
-        TextField text12 = new TextField();
-        Label l13 = new Label("Father Business");
-        TextField text13 = new TextField();
-        Label l14 = new Label("Father Income");
-        TextField text14 = new TextField();
-        Label l15 = new Label("Father Email");
-        TextField text15 = new TextField();
-        Button b = new Button("Submit");
-        Button back = new Button("Back to Menu");
-        GridPane pane2 = new GridPane();
-        pane2.add(l,0,0);
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l1, 0, 1);
-        pane2.add(text1, 2, 1);
-        pane2.add(l2, 0, 2);
-        pane2.add(text2, 2, 2);
-        pane2.add(l3, 0, 3);
-        pane2.add(text3, 2, 3);
-        pane2.add(l4, 0, 4);
-        pane2.add(text4, 2, 4);
-        pane2.add(l5, 0, 5);
-        pane2.add(r1, 2, 5);
-        pane2.add(r2, 3, 5);
-        pane2.add(l6, 0, 6);
-        pane2.add(text6, 2, 6);
-        pane2.add(l7, 0, 7);
-        pane2.add(text7, 2, 7);
-        pane2.add(l8, 0, 8);
-        pane2.add(text8, 2, 8);
-        pane2.add(l9, 0, 9);
-        pane2.add(text9, 2, 9);
-        pane2.add(l10, 0, 10);
-        pane2.add(text10, 2, 10);
-        pane2.add(l11, 0, 11);
-        pane2.add(text11, 2, 11);
-        pane2.add(l12, 0, 12);
-        pane2.add(text12, 2, 12);
-        pane2.add(l13, 0, 13);
-        pane2.add(text13, 2, 13);
-        pane2.add(l14, 0, 14);
-        pane2.add(text14, 2, 14);
-        pane2.add(l15, 0, 15);
-        pane2.add(text15, 2, 15);
-        pane2.add(b, 4, 16);
-        pane2.add(back, 4, 18);
-        pane2.setHgap(5);
-        pane2.setVgap(5);
-        Scene s1 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s1);
-        Label admission = new Label();
-        b.setOnAction(submitEvent ->
-        {
+        // --- Heading ---
+        Label heading = new Label("Add Student");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        heading.setTextFill(Color.DARKBLUE);
+
+        // --- Grid for input fields ---
+        GridPane grid = new GridPane();
+        grid.setHgap(15);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20));
+
+        // --- Personal Info ---
+        Label nameLabel = new Label("Name:"); TextField nameField = new TextField();
+        Label ageLabel = new Label("Age:"); TextField ageField = new TextField();
+        Label idLabel = new Label("ID:"); TextField idField = new TextField();
+        Label cnicLabel = new Label("CNIC:"); TextField cnicField = new TextField();
+        Label genderLabel = new Label("Gender:");
+        RadioButton male = new RadioButton("Male");
+        RadioButton female = new RadioButton("Female");
+        ToggleGroup genderGroup = new ToggleGroup();
+        male.setToggleGroup(genderGroup); female.setToggleGroup(genderGroup);
+        HBox genderBox = new HBox(10, male, female);
+
+        // --- Contact Info ---
+        Label contactLabel = new Label("Contact:"); TextField contactField = new TextField();
+        Label emailLabel = new Label("Email:"); TextField emailField = new TextField();
+        Label addressLabel = new Label("Address:"); TextField addressField = new TextField();
+
+        // --- Parents Info ---
+        Label fatherNameLabel = new Label("Father Name:"); TextField fatherField = new TextField();
+        Label motherNameLabel = new Label("Mother Name:"); TextField motherField = new TextField();
+        Label fatherContactLabel = new Label("Father Contact:"); TextField fatherContact = new TextField();
+        Label motherContactLabel = new Label("Mother Contact:"); TextField motherContact = new TextField();
+        Label fatherBusinessLabel = new Label("Father Business:"); TextField businessField = new TextField();
+        Label fatherIncomeLabel = new Label("Father Income:"); TextField incomeField = new TextField();
+        Label fatherEmailLabel = new Label("Father Email:"); TextField fatherEmail = new TextField();
+
+        // --- Add to grid ---
+        grid.add(nameLabel, 0, 0); grid.add(nameField, 1, 0);
+        grid.add(ageLabel, 0, 1); grid.add(ageField, 1, 1);
+        grid.add(idLabel, 0, 2); grid.add(idField, 1, 2);
+        grid.add(cnicLabel, 0, 3); grid.add(cnicField, 1, 3);
+        grid.add(genderLabel, 0, 4); grid.add(genderBox, 1, 4);
+        grid.add(contactLabel, 0, 5); grid.add(contactField, 1, 5);
+        grid.add(emailLabel, 0, 6); grid.add(emailField, 1, 6);
+        grid.add(addressLabel, 0, 7); grid.add(addressField, 1, 7);
+        grid.add(fatherNameLabel, 0, 8); grid.add(fatherField, 1, 8);
+        grid.add(motherNameLabel, 0, 9); grid.add(motherField, 1, 9);
+        grid.add(fatherContactLabel, 0, 10); grid.add(fatherContact, 1, 10);
+        grid.add(motherContactLabel, 0, 11); grid.add(motherContact, 1, 11);
+        grid.add(fatherBusinessLabel, 0, 12); grid.add(businessField, 1, 12);
+        grid.add(fatherIncomeLabel, 0, 13); grid.add(incomeField, 1, 13);
+        grid.add(fatherEmailLabel, 0, 14); grid.add(fatherEmail, 1, 14);
+
+        // --- Feedback label ---
+        Label feedback = new Label();
+        feedback.setFont(Font.font("Arial", 16));
+
+        // --- Buttons ---
+        Button submitBtn = new Button("Submit");
+        submitBtn.setStyle("-fx-background-color: #4CAF50; -fx-text-fill: white;");
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: #f44336; -fx-text-fill: white;");
+        HBox buttons = new HBox(15, submitBtn, backBtn);
+        buttons.setAlignment(Pos.CENTER);
+
+        // --- Main layout ---
+        VBox layout = new VBox(20, heading, grid, buttons, feedback);
+        layout.setPadding(new Insets(20));
+        layout.setAlignment(Pos.TOP_CENTER);
+        setBackgroundColor(layout);
+
+        Scene scene = new Scene(layout, 700, 750);
+        stage.setScene(scene);
+
+        // --- Submit action ---
+        submitBtn.setOnAction(e -> {
             try {
-                // make sure "data" folder exists
+                Student student = new Student(
+                        nameField.getText(),
+                        Integer.parseInt(ageField.getText()),
+                        Integer.parseInt(idField.getText()),
+                        Long.parseLong(cnicField.getText()),
+                        male.isSelected(),
+                        Long.parseLong(contactField.getText()),
+                        emailField.getText(),
+                        addressField.getText(),
+                        fatherField.getText(),
+                        motherField.getText(),
+                        Long.parseLong(fatherContact.getText()),
+                        Long.parseLong(motherContact.getText()),
+                        businessField.getText(),
+                        Double.parseDouble(incomeField.getText()),
+                        fatherEmail.getText()
+                );
+
+                this.studentManagement.admitStudent(student);
+
+                // --- Write to file ---
                 File file = new File("data/Student.txt");
                 file.getParentFile().mkdirs();
-                try (FileWriter fileWriter = new FileWriter(file, true)) {
-                    String name = text1.getText();
-                    int age = Integer.parseInt(text2.getText());
-                    int id = Integer.parseInt(text3.getText());
-                    long cnic = Long.parseLong(text4.getText());
-                    boolean gender = r1.isSelected();
-                    long contact_info = Long.parseLong(text6.getText());
-                    String email = text7.getText();
-                    String address = text8.getText();
-                    String f_n = text9.getText();
-                    String m_n = text10.getText();
-                    long f_contact_info = Long.parseLong(text11.getText());
-                    long m_contact_info = Long.parseLong(text12.getText());
-                    String f_bus = text13.getText();
-                    double f_in = Double.parseDouble(text14.getText());
-                    String f_em = text15.getText();
+                boolean writeHeader = !file.exists() || file.length() == 0;
 
-                    student = new Student(name, age, id, cnic, gender,
-                            contact_info, email, address, f_n, m_n, f_contact_info,
-                            m_contact_info, f_bus, f_in, f_em, true);
-
-                    this.studentManagement.admitStudent(student);
-
-                    admission.setText("Student admitted successfully.");
-                    pane2.add(admission, 4, 17);
-
-                    // Write the student data in text form
-                    fileWriter.write("Name: " + name + "\n");
-                    fileWriter.write("Age: " + age + "\n");
-                    fileWriter.write("ID: " + id + "\n");
-                    fileWriter.write("CNIC: " + cnic + "\n");
-                    fileWriter.write("Gender: " + (gender ? "Male" : "Female") + "\n");
-                    fileWriter.write("Contact Info: " + contact_info + "\n");
-                    fileWriter.write("Email: " + email + "\n");
-                    fileWriter.write("Address: " + address + "\n");
-                    fileWriter.write("Father Name: " + f_n + "\n");
-                    fileWriter.write("Mother Name: " + m_n + "\n");
-                    fileWriter.write("Father Contact: " + f_contact_info + "\n");
-                    fileWriter.write("Mother Contact: " + m_contact_info + "\n");
-                    fileWriter.write("Father Business: " + f_bus + "\n");
-                    fileWriter.write("Father Income: " + f_in + "\n");
-                    fileWriter.write("Father Email: " + f_em + "\n");
+                try (FileWriter writer = new FileWriter(file, true)) {
+                    if (writeHeader) {
+                        writer.write("ID,Name,Age,CNIC,Gender,Contact,Email,Address,FatherName,MotherName,FatherContact,MotherContact,FatherBusiness,FatherIncome,FatherEmail\n");
+                    }
+                    writer.write(
+                            student.getId() + "," +
+                                    student.getName() + "," +
+                                    student.getAge() + "," +
+                                    student.getCnic() + "," +
+                                    (student.isGender() ? "Male" : "Female") + "," +
+                                    student.getContact_info() + "," +
+                                    student.getEmail() + "," +
+                                    student.getAddress() + "," +
+                                    student.getFather_name() + "," +
+                                    student.getMother_name() + "," +
+                                    student.getFather_contact() + "," +
+                                    student.getMother_contact() + "," +
+                                    student.getFather_business() + "," +
+                                    student.getFather_income() + "," +
+                                    student.getFather_email() + "\n"
+                    );
                 }
 
-            } catch (IOException | NumberFormatException e) {
-                throw new RuntimeException(e);
+                feedback.setTextFill(Color.GREEN);
+                feedback.setText("Student admitted successfully ✔");
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter valid numeric values.");
+            } catch (Exception ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Error: " + ex.getMessage());
             }
-
         });
-        backbutton(back,stage);
+
+        backbutton(backBtn, stage);
     }
+
+
+    // ---------- Utility methods ----------
+    private HBox formRow(String label, Control input) {
+        Label l = new Label(label);
+        l.setMinWidth(150);
+        l.setFont(Font.font("Arial", 16));
+        HBox row = new HBox(10, l, input);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
+    }
+
+    private HBox radioRow(String label, RadioButton... radios) {
+        Label l = new Label(label);
+        l.setMinWidth(150);
+        l.setFont(Font.font("Arial", 16));
+        HBox radioBox = new HBox(10, radios);
+        HBox row = new HBox(10, l, radioBox);
+        row.setAlignment(Pos.CENTER_LEFT);
+        return row;
+    }
+
+    private VBox pageLayout(String title) {
+        Label heading = new Label(title);
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 28));
+        heading.setTextFill(Color.DARKBLUE);
+
+        VBox box = new VBox(15);
+        box.setPadding(new Insets(20));
+        box.setAlignment(Pos.TOP_CENTER);
+        box.getChildren().add(heading);
+
+        return box;
+    }
+
+    // ---------- Add Teacher ----------
     public void addTeacher(Stage stage) {
-        Label l = new Label("Add Teacher");
-        Label l01 = new Label("Name");
-        TextField t01 = new TextField();
-        Label l02 = new Label("Age");
-        TextField t02 = new TextField();
-        Label l03 = new Label("id");
-        TextField t03 = new TextField();
-        Label l04 = new Label("Cnic");
-        TextField t04 = new TextField();
-        Label l05 = new Label("Gender");
-        RadioButton r11 = new RadioButton("Male");
-        RadioButton r12 = new RadioButton("Female");
-        ToggleGroup t111 = new ToggleGroup();
-        r11.setToggleGroup(t111);
-        r12.setToggleGroup(t111);
-        Label l06 = new Label("Contact Info");
-        TextField t06 = new TextField();
-        Label l07 = new Label("Email");
-        TextField t07 = new TextField();
-        Label l08 = new Label("Address");
-        TextField t08 = new TextField();
-        Label l19 = new Label("Qualification");
-        TextField t19 = new TextField();
-        Label l110 = new Label("Experience Years");
-        TextField t110 = new TextField();
-        Label l111 = new Label("Certificate");
+        VBox layout = pageLayout("Add Teacher");
+
+        TextField name = new TextField();
+        TextField age = new TextField();
+        TextField id = new TextField();
+        TextField cnic = new TextField();
+        TextField contact = new TextField();
+        TextField email = new TextField();
+        TextField address = new TextField();
+        TextField quali = new TextField();
+        TextField exp = new TextField();
+
+        RadioButton male = new RadioButton("Male");
+        RadioButton female = new RadioButton("Female");
+        ToggleGroup genderGroup = new ToggleGroup();
+        male.setToggleGroup(genderGroup);
+        female.setToggleGroup(genderGroup);
+
         RadioButton certYes = new RadioButton("Yes");
         RadioButton certNo = new RadioButton("No");
         ToggleGroup certGroup = new ToggleGroup();
         certYes.setToggleGroup(certGroup);
         certNo.setToggleGroup(certGroup);
-        Label l112 = new Label("Marital Status");
+
         RadioButton single = new RadioButton("Single");
         RadioButton married = new RadioButton("Married");
         ToggleGroup statusGroup = new ToggleGroup();
         single.setToggleGroup(statusGroup);
         married.setToggleGroup(statusGroup);
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
-        GridPane p2 = new GridPane();
-        p2.setVgap(5);
-        p2.setHgap(5);
-        p2.add(l,0,0);
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        p2.setAlignment(Pos.TOP_CENTER);
-        p2.add(l01, 0, 1);
-        p2.add(t01, 1, 1);
-        p2.add(l02, 0, 2);
-        p2.add(t02, 1, 2);
-        p2.add(l03, 0, 3);
-        p2.add(t03, 1, 3);
-        p2.add(l04, 0, 4);
-        p2.add(t04, 1, 4);
-        p2.add(l05, 0, 5);
-        p2.add(r11, 1, 5);
-        p2.add(r12, 2, 5);
-        p2.add(l06, 0, 6);
-        p2.add(t06, 1, 6);
-        p2.add(l07, 0, 7);
-        p2.add(t07, 1, 7);
-        p2.add(l08, 0, 8);
-        p2.add(t08, 1, 8);
-        p2.add(l19, 0, 9);
-        p2.add(t19, 1, 9);
-        p2.add(l110, 0, 10);
-        p2.add(t110, 1, 10);
-        p2.add(l111, 0, 11);
-        p2.add(certYes, 1, 11);
-        p2.add(certNo, 2, 11);
-        p2.add(l112, 0, 12);
-        p2.add(single, 1, 12);
-        p2.add(married, 2, 12);
-        p2.add(tb, 3, 13);
-        p2.add(tb1, 3, 15);
-        Scene s1 = new Scene(p2, 700, 700);
-        setBackgroundColor(p2);
-        stage.setScene(s1);
-        Label add = new Label();
-        tb.setOnAction(submitEvent ->
-        {
+
+        layout.getChildren().addAll(
+                formRow("Name", name),
+                formRow("Age", age),
+                formRow("ID", id),
+                formRow("CNIC", cnic),
+                radioRow("Gender", male, female),
+                formRow("Contact", contact),
+                formRow("Email", email),
+                formRow("Address", address),
+                formRow("Qualification", quali),
+                formRow("Experience (Years)", exp),
+                radioRow("Certificate", certYes, certNo),
+                radioRow("Marital Status", single, married)
+        );
+
+        Button submit = new Button("Submit");
+        Button back = new Button("Back");
+        submit.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        back.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        HBox buttons = new HBox(20, submit, back);
+        buttons.setAlignment(Pos.CENTER);
+
+        Label message = new Label();
+        message.setFont(Font.font("Arial", 16));
+        layout.getChildren().addAll(buttons, message);
+
+        Scene scene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(scene);
+
+        submit.setOnAction(e -> {
             try {
+                Teacher t = new Teacher(
+                        name.getText(),
+                        Integer.parseInt(age.getText()),
+                        Integer.parseInt(id.getText()),
+                        Long.parseLong(cnic.getText()),
+                        male.isSelected(),
+                        Long.parseLong(contact.getText()),
+                        email.getText(),
+                        address.getText(),
+                        quali.getText(),
+                        Integer.parseInt(exp.getText()),
+                        certYes.isSelected(),
+                        single.isSelected()
+                );
+                this.staffManagement.addTeacher(t);
+
+                // Append to file
                 File file = new File("data/Teacher.txt");
-                file.getParentFile().mkdirs();
-
-                try (FileWriter fileWriter = new FileWriter(file, true))
-                {
-                    String name = t01.getText();
-                    int age = Integer.parseInt(t02.getText());
-                    int id = Integer.parseInt(t03.getText());
-                    long cnic = Long.parseLong(t04.getText());
-                    boolean gender = r11.isSelected();
-                    long contact_info = Long.parseLong(t06.getText());
-                    String email = t07.getText();
-                    String address = t08.getText();
-                    String quali = t19.getText();
-                    int exp = Integer.parseInt(t110.getText());
-                    boolean cert = certYes.isSelected();
-                    boolean m_s = single.isSelected();
-                    teacher = new Teacher(name, age, id, cnic, gender,
-                            contact_info, email, address, quali, exp, cert, m_s);
-                    this.staffManagement.addTeacher(teacher);
-                    add.setText("Teacher added successfully");
-                    p2.add(add,3,14);
-
-                    fileWriter.write("Name: " + name + "\n");
-                    fileWriter.write("Age: " + age + "\n");
-                    fileWriter.write("ID: " + id + "\n");
-                    fileWriter.write("CNIC: " + cnic + "\n");
-                    fileWriter.write("Gender: " + (gender ? "Male" : "Female") + "\n");
-                    fileWriter.write("Contact Info: " + contact_info + "\n");
-                    fileWriter.write("Email: " + email + "\n");
-                    fileWriter.write("Address: " + address + "\n");
-                    fileWriter.write("Experience: " + exp + "\n");
-
-                    // Add a separator for better readability
-                    fileWriter.write("---\n");
-
+                try (PrintWriter pw = new PrintWriter(new FileOutputStream(file, true))) {
+                    String gender = male.isSelected() ? "Male" : "Female";
+                    String line = t.getId() + "," + t.getName() + "," + t.getAge() + "," + t.getCnic() + "," +
+                            gender + "," + t.getContact_info() + "," + t.getEmail() + "," + t.getAddress() + "," +
+                            t.getQualification() + "," + t.getExperience_years() + "," + (t.isCertificate() ? "Yes" : "No") + "," +
+                            (t.isMartial_status() ? "Single" : "Married");
+                    pw.println(line);
                 }
 
-            } catch (IOException | NumberFormatException e) {
-                throw new RuntimeException(e);
+                message.setText("Teacher added successfully ✔");
+                message.setTextFill(Color.GREEN);
+            } catch (Exception ex) {
+                message.setText("Invalid input! Please check your fields.");
+                message.setTextFill(Color.RED);
             }
         });
-        backbutton2(tb1,stage);
+
+        back.setOnAction(e -> backbutton2(back, stage));
     }
+
     public void addJuniorStaff(Stage stage) {
-        Label l = new Label("Add Junior Staff");
-        Label l01 = new Label("Name");
-        TextField t01 = new TextField();
-        Label l02 = new Label("Age");
-        TextField t02 = new TextField();
-        Label l03 = new Label("id");
-        TextField t03 = new TextField();
-        Label l04 = new Label("Cnic");
-        TextField t04 = new TextField();
-        Label l05 = new Label("Gender");
-        RadioButton r11 = new RadioButton("Male");
-        RadioButton r12 = new RadioButton("Female");
-        ToggleGroup t111 = new ToggleGroup();
-        r11.setToggleGroup(t111);
-        r12.setToggleGroup(t111);
-        Label l06 = new Label("Contact Info");
-        TextField t06 = new TextField();
-        Label l07 = new Label("Email");
-        TextField t07 = new TextField();
-        Label l08 = new Label("Address");
-        TextField t08 = new TextField();
-        Label l110 = new Label("Experience Years");
-        TextField t110 = new TextField();
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
-        GridPane p2 = new GridPane();
-        p2.setVgap(5);
-        p2.setHgap(5);
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        p2.setAlignment(Pos.TOP_CENTER);
-        p2.add(l,0,0);
-        p2.add(l01, 0, 1);
-        p2.add(t01, 1, 1);
-        p2.add(l02, 0, 2);
-        p2.add(t02, 1, 2);
-        p2.add(l03, 0, 3);
-        p2.add(t03, 1, 3);
-        p2.add(l04, 0, 4);
-        p2.add(t04, 1, 4);
-        p2.add(l05, 0, 5);
-        p2.add(r11, 1, 5);
-        p2.add(r12, 2, 5);
-        p2.add(l06, 0, 6);
-        p2.add(t06, 1, 6);
-        p2.add(l07, 0, 7);
-        p2.add(t07, 1, 7);
-        p2.add(l08, 0, 8);
-        p2.add(t08, 1, 8);
-        p2.add(l110, 0, 10);
-        p2.add(t110, 1, 10);
-        p2.add(tb, 3, 13);
-        p2.add(tb1, 3, 15);
-        Scene s3 = new Scene(p2, 700, 700);
-        setBackgroundColor(p2);
-        stage.setScene(s3);
-        Label add = new Label();
-        tb.setOnAction(submitEvent ->
-        {
+        VBox layout = pageLayout("Add Junior Staff");
+
+        TextField name = new TextField();
+        TextField age = new TextField();
+        TextField id = new TextField();
+        TextField cnic = new TextField();
+        TextField contact = new TextField();
+        TextField email = new TextField();
+        TextField address = new TextField();
+        TextField exp = new TextField();
+
+        RadioButton male = new RadioButton("Male");
+        RadioButton female = new RadioButton("Female");
+        ToggleGroup genderGroup = new ToggleGroup();
+        male.setToggleGroup(genderGroup);
+        female.setToggleGroup(genderGroup);
+
+        layout.getChildren().addAll(
+                formRow("Name", name),
+                formRow("Age", age),
+                formRow("ID", id),
+                formRow("CNIC", cnic),
+                radioRow("Gender", male, female),
+                formRow("Contact", contact),
+                formRow("Email", email),
+                formRow("Address", address),
+                formRow("Experience Years", exp)
+        );
+
+        Button submit = new Button("Submit");
+        Button back = new Button("Back");
+        submit.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        back.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        HBox buttons = new HBox(20, submit, back);
+        buttons.setAlignment(Pos.CENTER);
+
+        Label message = new Label();
+        message.setFont(Font.font("Arial", 16));
+        layout.getChildren().addAll(buttons, message);
+
+        Scene scene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(scene);
+
+        submit.setOnAction(e -> {
             try {
-                File file = new File("data/JuniorStaff.txt");
-                file.getParentFile().mkdirs();
-                try (FileWriter fileWriter = new FileWriter(file, true)) {
-                    String name = t01.getText();
-                    int age = Integer.parseInt(t02.getText());
-                    int id = Integer.parseInt(t03.getText());
-                    long cnic = Long.parseLong(t04.getText());
-                    boolean gender = r11.isSelected();
-                    long contact_info = Long.parseLong(t06.getText());
-                    String email = t07.getText();
-                    String address = t08.getText();
-                    int exp = Integer.parseInt(t110.getText());
-                    juniorStaff = new JuniorStaff(name, age, id, cnic, gender,
-                            contact_info, email, address, exp);
-                    this.staffManagement.addJuniorStaff(juniorStaff);
-                    add.setText("JuniorStaff added successfully.");
-                    p2.add(add, 3, 14);
+                JuniorStaff js = new JuniorStaff(
+                        name.getText(),
+                        Integer.parseInt(age.getText()),
+                        Integer.parseInt(id.getText()),
+                        Long.parseLong(cnic.getText()),
+                        male.isSelected(),
+                        Long.parseLong(contact.getText()),
+                        email.getText(),
+                        address.getText(),
+                        Integer.parseInt(exp.getText())
+                );
+                this.staffManagement.addJuniorStaff(js);
 
-                    fileWriter.write("Name: " + name + "\n");
-                    fileWriter.write("Age: " + age + "\n");
-                    fileWriter.write("ID: " + id + "\n");
-                    fileWriter.write("CNIC: " + cnic + "\n");
-                    fileWriter.write("Gender: " + (gender ? "Male" : "Female") + "\n");
-                    fileWriter.write("Contact Info: " + contact_info + "\n");
-                    fileWriter.write("Email: " + email + "\n");
-                    fileWriter.write("Address: " + address + "\n");
-                    fileWriter.write("Experience: " + exp + "\n");
-
-                    // Add a separator for better readability
-                    fileWriter.write("---\n");
+                // Append to file
+                File file = new File("data/Staff.txt");
+                try (PrintWriter pw = new PrintWriter(new FileOutputStream(file, true))) {
+                    String gender = male.isSelected() ? "Male" : "Female";
+                    String line = js.getId() + "," + js.getName() + "," + js.getAge() + "," + js.getCnic() + "," +
+                            gender + "," + js.getContact_info() + "," + js.getEmail() + "," + js.getAddress() + "," +
+                            js.getExperience();
+                    pw.println(line);
                 }
 
-            } catch (IOException | NumberFormatException e) {
-                throw new RuntimeException(e);
+                message.setText("Junior Staff added successfully ✔");
+                message.setTextFill(Color.GREEN);
+            } catch (Exception ex) {
+                message.setText("Invalid input! Check your fields.");
+                message.setTextFill(Color.RED);
             }
         });
-        backbutton2(tb1,stage);
+
+        back.setOnAction(e -> backbutton2(back, stage));
     }
-    public void removeStudent(Stage stage) {
-        Label l = new Label("Remove Student:");
-        Label l2 = new Label("Enter the student ID to remove:");
-        TextField text1 = new TextField();
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+    // ---------- Remove Entity (Student / Teacher / Junior) ----------
+    public void removeEntity(Stage stage, String title, String type) {
+        // Heading
+        Label heading = new Label(title);
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        // ID Input
+        Label idLabel = new Label("Enter " + type + " ID:");
+        idLabel.setFont(Font.font(16));
+        TextField idField = new TextField();
+        idField.setPrefWidth(250);
 
-        Label add = new Label();
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20);
+        formGrid.setVgap(15);
+        formGrid.add(idLabel, 0, 0);
+        formGrid.add(idField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            boolean removed = this.studentManagement.removeStudent(id);
+        // Buttons
+        Button submitBtn = new Button("Submit");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: crimson; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120); backBtn.setPrefWidth(120);
 
-            if (removed) {
-                add.setText("Student with id " + id + " removed");
-            } else {
-                add.setText("No student found with the specified ID.");
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        // Feedback Label
+        Label feedback = new Label();
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setWrapText(true);
+        feedback.setTextAlignment(TextAlignment.CENTER);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
+
+        // Layout
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setPadding(new Insets(30));
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        // Scene
+        Scene scene = new Scene(layout, 700, 700);
+        setBackgroundColor(layout);
+        stage.setScene(scene);
+
+        // Submit Button Action
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                boolean removed = switch (type.toLowerCase()) {
+                    case "student" -> this.studentManagement.removeStudent(id);
+                    case "teacher" -> this.staffManagement.removeTeacher(id);
+                    case "junior" -> this.staffManagement.removeJuniorStaff(id);
+                    default -> false;
+                };
+                if (removed) {
+                    feedback.setText(type + " with ID " + id + " removed successfully.");
+                    feedback.setTextFill(Color.DARKGREEN);
+                } else {
+                    feedback.setText("No " + type + " found with the specified ID.");
+                    feedback.setTextFill(Color.RED);
+                }
+            } catch (NumberFormatException ex) {
+                feedback.setText("Please enter a valid numeric ID.");
+                feedback.setTextFill(Color.RED);
             }
-
-            pane2.add(add, 2, 3);
         });
 
-        backbutton(tb1,stage);
-
-    }
-    public void removeTeacher(Stage stage) {
-        Label l = new Label("Remove Teacher:");
-        Label l2 = new Label("Enter the teacher ID to remove:");
-        TextField text1 = new TextField();
-
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
-
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
-
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
-
-        Label add = new Label();
-
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            boolean removed = this.staffManagement.removeTeacher(id);
-
-            if (removed) {
-                add.setText("Teacher with id " + id + " removed");
-            } else {
-                add.setText("No teacher found with the specified ID.");
-            }
-
-            pane2.add(add, 2, 3);
+        // Back Button Action
+        backBtn.setOnAction(e -> {
+            if (type.equalsIgnoreCase("student")) backbutton(backBtn, stage);
+            else backbutton2(backBtn, stage);
         });
-
-        backbutton2(tb1,stage);
     }
 
-    public void removeJuniorStaff(Stage stage) {
-        Label l = new Label("Remove Junior Staff:");
-        Label l2 = new Label("Enter the junior staff ID to remove:");
-        TextField text1 = new TextField();
-
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
-
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
-
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
-
-        Label add = new Label();
-
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            boolean removed = this.staffManagement.removeJuniorStaff(id);
-
-            if (removed) {
-                add.setText("Junior Staff with id " + id + " removed");
-            } else {
-                add.setText("No junior staff found with the specified ID.");
-            }
-
-            pane2.add(add, 2, 3);
-        });
-
-        backbutton2(tb1,stage);
-    }
-
+    // 1. Calculate Salary of Teacher
     public void calculateSalaryOfTeacher(Stage stage) {
-        Label l = new Label("Salary of Teacher:");
-        Label l2 = new Label("Enter the Teacher ID to calculate salary:");
-        TextField text1 = new TextField();
+        Label heading = new Label("Teacher Salary");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label idLabel = new Label("Teacher ID:");
+        idLabel.setFont(Font.font("Arial", 16));
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20);
+        formGrid.setVgap(15);
+        formGrid.add(idLabel, 0, 0);
+        formGrid.add(idField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button submitBtn = new Button("Calculate");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            String info = this.staffManagement.TeacherSalary(id);
-            add.setText(info);
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
 
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-            pane2.add(add, 2, 3);
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                String info = this.staffManagement.TeacherSalary(id);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(info);
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter a valid numeric ID.");
+            }
         });
 
-        backbutton2(tb1,stage);
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
+    // 2. Calculate Salary of Junior Staff
     public void calculateSalaryOfJuniorStaff(Stage stage) {
-        Label l = new Label("Salary of Junior Staff:");
-        Label l2 = new Label("Enter the Junior Staff ID to calculate salary:");
-        TextField text1 = new TextField();
+        Label heading = new Label("Junior Staff Salary");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label idLabel = new Label("Junior Staff ID:");
+        idLabel.setFont(Font.font("Arial", 16));
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20);
+        formGrid.setVgap(15);
+        formGrid.add(idLabel, 0, 0);
+        formGrid.add(idField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button submitBtn = new Button("Calculate");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            String info = this.staffManagement.JuniorStaffSalary(id);
-            add.setText(info);
-            pane2.add(add, 2, 3);
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                String info = this.staffManagement.JuniorStaffSalary(id);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(info);
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter a valid numeric ID.");
+            }
         });
-        backbutton2(tb1,stage);
+
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
+    // 3. Display Fee of Student
     public void displayFee(Stage stage) {
-        Label l = new Label("Fee of Student:");
-        Label l2 = new Label("Enter the Student ID to see the fee:");
-        TextField text1 = new TextField();
+        Label heading = new Label("Student Fee");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label idLabel = new Label("Student ID:");
+        idLabel.setFont(Font.font("Arial", 16));
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20);
+        formGrid.setVgap(15);
+        formGrid.add(idLabel, 0, 0);
+        formGrid.add(idField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button submitBtn = new Button("Check Fee");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            String info = this.studentManagement.DisplayingFee(id);
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
 
-            add.setText(info);
-            pane2.add(add, 2, 3);
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                String info = this.studentManagement.DisplayingFee(id);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(info);
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter a valid numeric ID.");
+            }
         });
 
-        backbutton(tb1,stage);
+        backbutton(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
+    // 4. See Scholarship of Student
     public void seeScholarship(Stage stage) {
-        Label l = new Label("Scholarship of Student:");
-        Label l2 = new Label("Enter the Student ID to apply for scholarship:");
-        TextField text1 = new TextField();
+        Label heading = new Label("Student Scholarship");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label idLabel = new Label("Student ID:");
+        idLabel.setFont(Font.font("Arial", 16));
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 5);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20);
+        formGrid.setVgap(15);
+        formGrid.add(idLabel, 0, 0);
+        formGrid.add(idField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button submitBtn = new Button("Check Scholarship");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(140);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            String info = this.studentManagement.ScholarShip(id);
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
 
-            add.setText(info);
-            pane2.add(add, 2, 3);
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                String info = this.studentManagement.ScholarShip(id);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(info);
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter a valid numeric ID.");
+            }
         });
 
-        backbutton(tb1,stage);
+        backbutton(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
+    // 1. Update Student Information
     public void UpdateStudentInformation(Stage stage) {
-        Label l = new Label("Updating Student Information");
-        Label l2 = new Label("Enter the Student ID to update information:");
-        TextField text1 = new TextField();
+        Label heading = new Label("Update Student Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label l6 = new Label("Contact Info");
-        TextField text6 = new TextField();
+        // Input fields
+        Label idLabel = new Label("Student ID:");
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        Label l7 = new Label("Email");
-        TextField text7 = new TextField();
+        Label contactLabel = new Label("Contact Info:");
+        TextField contactField = new TextField();
 
-        Label l11 = new Label("Father Contact");
-        TextField text11 = new TextField();
+        Label emailLabel = new Label("Email:");
+        TextField emailField = new TextField();
 
-        Label l12 = new Label("Mother Contact");
-        TextField text12 = new TextField();
+        Label fatherContactLabel = new Label("Father Contact:");
+        TextField fatherContactField = new TextField();
 
-        Label l15 = new Label("Father Email");
-        TextField text15 = new TextField();
+        Label motherContactLabel = new Label("Mother Contact:");
+        TextField motherContactField = new TextField();
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label fatherEmailLabel = new Label("Father Email:");
+        TextField fatherEmailField = new TextField();
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(l6, 0, 2);
-        pane2.add(text6, 1, 2);
-        pane2.add(l7, 0, 3);
-        pane2.add(text7, 1, 3);
-        pane2.add(l11, 0, 5);
-        pane2.add(text11, 1, 5);
-        pane2.add(l12, 0, 6);
-        pane2.add(text12, 1, 6);
-        pane2.add(l15, 0, 7);
-        pane2.add(text15, 1, 7);
-        pane2.add(tb, 2, 8);
-        pane2.add(tb1, 2, 10);
-        pane2.setHgap(5);
-        pane2.setVgap(5);
+        // Form Grid
+        GridPane formGrid = new GridPane();
+        formGrid.setVgap(15);
+        formGrid.setHgap(20);
+        formGrid.add(idLabel, 0, 0); formGrid.add(idField, 1, 0);
+        formGrid.add(contactLabel, 0, 1); formGrid.add(contactField, 1, 1);
+        formGrid.add(emailLabel, 0, 2); formGrid.add(emailField, 1, 2);
+        formGrid.add(fatherContactLabel, 0, 3); formGrid.add(fatherContactField, 1, 3);
+        formGrid.add(motherContactLabel, 0, 4); formGrid.add(motherContactField, 1, 4);
+        formGrid.add(fatherEmailLabel, 0, 5); formGrid.add(fatherEmailField, 1, 5);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        // Buttons
+        Button submitBtn = new Button("Update");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            long contact_info = Long.parseLong(text6.getText());
-            String email = text7.getText();
-            long f_contact_info = Long.parseLong(text11.getText());
-            long m_contact_info = Long.parseLong(text12.getText());
-            String f_em = text15.getText();
+        // Feedback Label
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
 
-            String info = this.studentManagement.UpdatingInfoById(id, email, contact_info, f_contact_info, m_contact_info, f_em);
+        // Layout
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-            add.setText(info);
-            pane2.add(add, 0, 9);
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                long contact = Long.parseLong(contactField.getText());
+                String email = emailField.getText();
+                long fContact = Long.parseLong(fatherContactField.getText());
+                long mContact = Long.parseLong(motherContactField.getText());
+                String fEmail = fatherEmailField.getText();
+
+                File file = new File("data/Student.txt");
+                if (!file.exists()) {
+                    feedback.setTextFill(Color.RED);
+                    feedback.setText("No student records found.");
+                    return;
+                }
+
+                // Read all lines
+                ArrayList<String> lines = new ArrayList<>();
+                boolean updated = false;
+                try (Scanner sc = new Scanner(file)) {
+                    while (sc.hasNextLine()) {
+                        String line = sc.nextLine();
+                        String[] parts = line.split(",");
+                        if (parts.length < 15) {
+                            lines.add(line);
+                            continue;
+                        }
+                        int studentId = Integer.parseInt(parts[0]);
+                        if (studentId == id) {
+                            // Update CSV line
+                            parts[5] = String.valueOf(contact);
+                            parts[6] = email;
+                            parts[10] = String.valueOf(fContact);
+                            parts[11] = String.valueOf(mContact);
+                            parts[14] = fEmail;
+                            line = String.join(",", parts);
+                            updated = true;
+                        }
+                        lines.add(line);
+                    }
+                }
+
+                if (!updated) {
+                    feedback.setTextFill(Color.RED);
+                    feedback.setText("Student ID not found.");
+                    return;
+                }
+
+                // Write back all lines
+                try (PrintWriter pw = new PrintWriter(file)) {
+                    for (String l : lines) {
+                        pw.println(l);
+                    }
+                }
+
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText("Student information updated successfully ✔");
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter valid numeric values where required.");
+            } catch (Exception ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Error: " + ex.getMessage());
+            }
         });
 
-        backbutton(tb1,stage);
-
+        backbutton(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
+    // 2. Update Teacher Information
     public void UpdatingTeacherInfo(Stage stage) {
-        Label l = new Label("Updating Student Information");
-        Label l2 = new Label("Enter the Student ID to update information:");
-        TextField text1 = new TextField();
-        Label l06 = new Label("Contact Info");
-        TextField t06 = new TextField();
+        Label heading = new Label("Update Teacher Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label l07 = new Label("Email");
-        TextField t07 = new TextField();
+        Label idLabel = new Label("Teacher ID:");
+        TextField idField = new TextField();
+        idField.setPrefWidth(200);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label contactLabel = new Label("Contact Info:");
+        TextField contactField = new TextField();
 
-        GridPane p2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        p2.setAlignment(Pos.TOP_CENTER);
-        p2.setVgap(5);
-        p2.setHgap(5);
-        p2.add(l,0,0);
-        p2.add(l2, 0, 1);
-        p2.add(text1, 1, 1);
-        p2.add(l06, 0, 2);
-        p2.add(t06, 1, 2);
-        p2.add(l07, 0, 3);
-        p2.add(t07, 1, 3);
-        p2.add(tb, 2, 4);
-        p2.add(tb1, 2, 6);
+        Label emailLabel = new Label("Email:");
+        TextField emailField = new TextField();
 
-        Scene s3 = new Scene(p2, 700, 700);
-        setBackgroundColor(p2);
+        GridPane formGrid = new GridPane();
+        formGrid.setVgap(15);
+        formGrid.setHgap(20);
+        formGrid.add(idLabel, 0, 0); formGrid.add(idField, 1, 0);
+        formGrid.add(contactLabel, 0, 1); formGrid.add(contactField, 1, 1);
+        formGrid.add(emailLabel, 0, 2); formGrid.add(emailField, 1, 2);
+        formGrid.setAlignment(Pos.CENTER);
 
-        stage.setScene(s3);
+        Button submitBtn = new Button("Update");
+        Button backBtn = new Button("Back");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            long contact_info = Long.parseLong(t06.getText());
-            String email = t07.getText();
-            String info = this.staffManagement.UpdateTeacherInfoById(id, email, contact_info);
+        Label feedback = new Label();
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
+        feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400);
+        feedback.setAlignment(Pos.CENTER);
 
-            add.setText(info);
-            p2.add(add, 0, 9);
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        submitBtn.setOnAction(e -> {
+            try {
+                int id = Integer.parseInt(idField.getText());
+                long contact = Long.parseLong(contactField.getText());
+                String email = emailField.getText();
+
+                File file = new File("data/Teacher.txt");
+                ArrayList<String> lines = new ArrayList<>();
+                boolean updated = false;
+
+                if (!file.exists()) {
+                    feedback.setTextFill(Color.RED);
+                    feedback.setText("Teacher file does not exist!");
+                    return;
+                }
+
+                try (Scanner sc = new Scanner(file)) {
+                    while (sc.hasNextLine()) {
+                        String line = sc.nextLine();
+                        String[] parts = line.split(",");
+                        if (parts.length < 12) {
+                            lines.add(line);
+                            continue;
+                        }
+                        int tid = Integer.parseInt(parts[0]);
+                        if (tid == id) {
+                            parts[5] = String.valueOf(contact);
+                            parts[6] = email;
+                            line = String.join(",", parts);
+                            updated = true;
+                        }
+                        lines.add(line);
+                    }
+                }
+
+                if (!updated) {
+                    feedback.setTextFill(Color.RED);
+                    feedback.setText("Teacher ID not found!");
+                    return;
+                }
+
+                try (PrintWriter pw = new PrintWriter(file)) {
+                    for (String l : lines) pw.println(l);
+                }
+
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText("Teacher information updated successfully ✔");
+
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Please enter valid numeric values where required.");
+            } catch (Exception ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Error updating teacher info: " + ex.getMessage());
+            }
         });
-        backbutton2(tb1,stage);
-    }
-    public void displayPrincipleInfo(Stage stage)
-    {
-        principle = new Principle("Zaviyar", 28, 1, 12345678, true, 0300-42560650, "Zavi@gmail.com", "Bahria Town");
-        Button tb1 = new Button("Back to Menu");
-        Label label = new Label("Displaying Principle Information");
-        Label l = new Label();
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        l.setText(String.valueOf(principle.toString()));
-        GridPane p = new GridPane();
-        p.setAlignment(Pos.TOP_CENTER);
-        p.add(label,0,0);
-        p.add(l,0,1);
-        p.add(tb1,2,13);
-        Scene s3 = new Scene(p, 700, 700);
-        setBackgroundColor(p);
 
-        stage.setScene(s3);
-        backbutton2(tb1,stage);
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
+
+    // 1. Display Principal Info
+    public void displayPrincipleInfo(Stage stage) {
+        Principle principle = new Principle("Zaviyar", 28, 1, 12345678, true, 030042560650L, "Zavi@gmail.com", "Bahria Town");
+
+        Label heading = new Label("Principal Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
+
+        TextArea infoArea = new TextArea(principle.toString());
+        infoArea.setEditable(false);
+        infoArea.setWrapText(true);
+        infoArea.setFont(Font.font("Arial", 16));
+        infoArea.setPrefHeight(500);
+        infoArea.setPrefWidth(600);
+
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(150);
+
+        VBox layout = new VBox(20, heading, infoArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
+    }
+
+    // 2. Display Student Info
     public void displayStudentInfo(Stage stage) {
-        Button tb1 = new Button("Back to Menu");
+        Label heading = new Label("Student Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label label = new Label("Displaying Student Information");
-        Label l = new Label();
+        TextArea infoArea = new TextArea();
+        infoArea.setEditable(false);
+        infoArea.setWrapText(true);
+        infoArea.setFont(Font.font("Arial", 16));
+        infoArea.setPrefHeight(500);
+        infoArea.setPrefWidth(650);
 
-        StringBuilder studentinfo = new StringBuilder();
-        File file = new File("data/Student.txt");  // ✅ relative path
-
+        File file = new File("data/Student.txt");
+        StringBuilder studentInfo = new StringBuilder();
         if (!file.exists()) {
-            studentinfo.append("No student records found.\n");
+            studentInfo.append("No student records found.\n");
         } else {
             try (Scanner sc = new Scanner(file)) {
+                boolean isHeader = true;
                 while (sc.hasNextLine()) {
                     String line = sc.nextLine();
-                    studentinfo.append(line).append("\n");
+                    if (isHeader) { // skip CSV header
+                        isHeader = false;
+                        continue;
+                    }
+                    String[] parts = line.split(",");
+                    if (parts.length < 15) continue; // ignore incomplete lines
+                    studentInfo.append("Name: ").append(parts[1]).append("\n")
+                            .append("Age: ").append(parts[2]).append("\n")
+                            .append("ID: ").append(parts[0]).append("\n")
+                            .append("CNIC: ").append(parts[3]).append("\n")
+                            .append("Gender: ").append(parts[4]).append("\n")
+                            .append("Contact Info: ").append(parts[5]).append("\n")
+                            .append("Email: ").append(parts[6]).append("\n")
+                            .append("Address: ").append(parts[7]).append("\n")
+                            .append("Father Name: ").append(parts[8]).append("\n")
+                            .append("Mother Name: ").append(parts[9]).append("\n")
+                            .append("Father Contact: ").append(parts[10]).append("\n")
+                            .append("Mother Contact: ").append(parts[11]).append("\n")
+                            .append("Father Business: ").append(parts[12]).append("\n")
+                            .append("Father Income: ").append(parts[13]).append("\n")
+                            .append("Father Email: ").append(parts[14]).append("\n")
+                            .append("------------------------------------------------\n");
                 }
             } catch (IOException e) {
-                studentinfo.append("Error reading student records.");
-                e.printStackTrace();
+                studentInfo.append("Error reading student records.");
             }
         }
 
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        l.setText(studentinfo.toString());
+        infoArea.setText(studentInfo.toString());
 
-        GridPane p = new GridPane();
-        p.setAlignment(Pos.TOP_CENTER);
-        p.setVgap(10);
-        p.setHgap(10);
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(150);
 
-        p.add(label, 0, 0);
-        p.add(l, 0, 1);
-        p.add(tb1, 0, 2);
+        VBox layout = new VBox(20, heading, infoArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        Scene s3 = new Scene(p, 700, 700);
-        setBackgroundColor(p);
-        stage.setScene(s3);
-
-        backbutton(tb1, stage);
+        backbutton(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
+
+    // 3. Display Teacher Info
     public void displayTeacherInfo(Stage stage) {
-        Button tb1 = new Button("Back to Menu");
+        Label heading = new Label("Teacher Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label label = new Label("Displaying Teacher Information");
-        Label l = new Label();
+        TextArea infoArea = new TextArea();
+        infoArea.setEditable(false);
+        infoArea.setWrapText(true);
+        infoArea.setFont(Font.font("Arial", 16));
+        infoArea.setPrefHeight(500);
+        infoArea.setPrefWidth(600);
 
-        StringBuilder teacherinfo = new StringBuilder();
-        File file = new File("data/Teacher.txt");  // ✅ relative path
-
+        File file = new File("data/Teacher.txt");
+        StringBuilder teacherInfo = new StringBuilder();
         if (!file.exists()) {
-            teacherinfo.append("No teacher records found.\n");
+            teacherInfo.append("No teacher records found.\n");
         } else {
             try (Scanner sc = new Scanner(file)) {
                 while (sc.hasNextLine()) {
                     String line = sc.nextLine();
-                    teacherinfo.append(line).append("\n");
+                    String[] parts = line.split(",");
+                    if (parts.length < 12) continue; // Skip invalid lines
+
+                    teacherInfo.append("ID: ").append(parts[0])
+                            .append("\nName: ").append(parts[1])
+                            .append("\nAge: ").append(parts[2])
+                            .append("\nCNIC: ").append(parts[3])
+                            .append("\nGender: ").append(parts[4])
+                            .append("\nContact: ").append(parts[5])
+                            .append("\nEmail: ").append(parts[6])
+                            .append("\nAddress: ").append(parts[7])
+                            .append("\nQualification: ").append(parts[8])
+                            .append("\nExperience (Years): ").append(parts[9])
+                            .append("\nCertificate: ").append(parts[10])
+                            .append("\nMarital Status: ").append(parts[11])
+                            .append("\n---------------------------\n");
                 }
             } catch (IOException e) {
-                teacherinfo.append("Error reading teacher records.");
-                e.printStackTrace();
+                teacherInfo.append("Error reading teacher records.");
             }
         }
 
-        l.setText(teacherinfo.toString());
+        infoArea.setText(teacherInfo.toString());
 
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(150);
 
-        GridPane p = new GridPane();
-        p.setAlignment(Pos.TOP_CENTER);
-        p.setVgap(10);
-        p.setHgap(10);
+        VBox layout = new VBox(20, heading, infoArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        p.add(label, 0, 0);
-        p.add(l, 0, 1);
-        p.add(tb1, 0, 2);
-
-        Scene s3 = new Scene(p, 700, 700);
-        setBackgroundColor(p);
-        stage.setScene(s3);
-
-        backbutton2(tb1, stage);
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
 
     public void displayJuniorStaffInfo(Stage stage) {
-        Button tb1 = new Button("Back to Menu");
+        Label heading = new Label("Junior Staff Information");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Label label = new Label("Displaying Junior Staff Information");
-        Label l = new Label();
+        TextArea infoArea = new TextArea();
+        infoArea.setEditable(false);
+        infoArea.setWrapText(true);
+        infoArea.setFont(Font.font("Arial", 16));
+        infoArea.setPrefHeight(500);
+        infoArea.setPrefWidth(600);
 
-        StringBuilder juniorstaffInfo = new StringBuilder();
-        File file = new File("data/Staff.txt");  // ✅ relative path
-
+        File file = new File("data/Staff.txt");
+        StringBuilder staffInfo = new StringBuilder();
         if (!file.exists()) {
-            juniorstaffInfo.append("No junior staff records found.\n");
+            staffInfo.append("No junior staff records found.\n");
         } else {
             try (Scanner sc = new Scanner(file)) {
                 while (sc.hasNextLine()) {
                     String line = sc.nextLine();
-                    juniorstaffInfo.append(line).append("\n");
+                    String[] parts = line.split(",");
+                    if (parts.length < 9) continue; // Skip invalid lines
+
+                    staffInfo.append("ID: ").append(parts[0])
+                            .append("\nName: ").append(parts[1])
+                            .append("\nAge: ").append(parts[2])
+                            .append("\nCNIC: ").append(parts[3])
+                            .append("\nGender: ").append(parts[4])
+                            .append("\nContact: ").append(parts[5])
+                            .append("\nEmail: ").append(parts[6])
+                            .append("\nAddress: ").append(parts[7])
+                            .append("\nExperience (Years): ").append(parts[8])
+                            .append("\n---------------------------\n");
                 }
             } catch (IOException e) {
-                juniorstaffInfo.append("Error reading junior staff records.");
-                e.printStackTrace();
+                staffInfo.append("Error reading junior staff records.");
             }
         }
 
-        l.setText(juniorstaffInfo.toString());
+        infoArea.setText(staffInfo.toString());
 
-        label.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(150);
 
-        GridPane p = new GridPane();
-        p.setAlignment(Pos.TOP_CENTER);
-        p.setVgap(10);
-        p.setHgap(10);
+        VBox layout = new VBox(20, heading, infoArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        p.add(label, 0, 0);
-        p.add(l, 0, 1);
-        p.add(tb1, 0, 2);  // ✅ cleaner placement
-
-        Scene s3 = new Scene(p, 700, 700);
-        setBackgroundColor(p);
-        stage.setScene(s3);
-
-        backbutton2(tb1, stage);
+        backbutton2(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
 
     public void assignCourses(Stage stage) {
-        Label l = new Label("Assigning Courses to Student:");
-        Label l2 = new Label("Enter the Student ID:");
-        TextField text1 = new TextField();
+        // Title
+        Label title = new Label("Assign Courses to Student");
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        title.setTextFill(Color.DARKBLUE);
 
-        Label l3 = new Label("Enter the Class Name (e.g., 5, 6, 7, 8):");
-        TextField classText = new TextField();
+        // Student ID
+        Label idLabel = new Label("Student ID:");
+        TextField idField = new TextField();
+        idField.setPromptText("Enter Student ID");
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        // Class Name
+        Label classLabel = new Label("Class (1-8):");
+        TextField classField = new TextField();
+        classField.setPromptText("Enter class number");
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l, 0, 0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(l3, 0, 2);
-        pane2.add(classText, 1, 2);
-        pane2.add(tb, 2, 3);
-        pane2.add(tb1, 2, 6);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        // Buttons
+        Button submitBtn = new Button("Submit");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
-        pane2.add(add, 2, 5); // Add the label once
+        // Feedback Label
+        Label feedback = new Label();
+        feedback.setTextFill(Color.FIREBRICK);
+        feedback.setWrapText(true);
+        feedback.setFont(Font.font("Arial", 14));
 
-        tb.setOnAction(submitEvent -> {
+        // Layout
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_CENTER);
+        grid.setPadding(new Insets(30));
+        grid.setHgap(20);
+        grid.setVgap(20);
+
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(idLabel, 0, 1); grid.add(idField, 1, 1);
+        grid.add(classLabel, 0, 2); grid.add(classField, 1, 2);
+        grid.add(submitBtn, 0, 3); grid.add(backBtn, 1, 3);
+        grid.add(feedback, 0, 4, 2, 1);
+
+        Scene scene = new Scene(grid, 700, 700);
+        setBackgroundColor(grid);
+        stage.setScene(scene);
+
+        submitBtn.setOnAction(e -> {
             try {
-                int id = Integer.parseInt(text1.getText());
-                int className = Integer.parseInt(classText.getText());
-                Class studentClass = new Class(className);
+                int id = Integer.parseInt(idField.getText());
+                int classNum = Integer.parseInt(classField.getText());
+                if (classNum < 1 || classNum > 8) throw new InputMismatchException("Class must be between 1 and 8");
 
-                if (className >= 1 && className <= 8) {
-                    String info = this.studentManagement.assignCoursesToStudent(id, studentClass);
-                    Class class1 = new Class(5);
-                    String i = this.studentManagement.assignCoursesToStudent(9,class1);
-                    add.setText(info);
-                } else {
-                    throw new InputMismatchException("Class name must be between 1 and 8");
-                }
-            } catch (NumberFormatException e) {
-                add.setText("Invalid input. Please enter numeric values for ID and Class Name.");
-            } catch (InputMismatchException hi) {
-                add.setText(hi.getMessage());
+                Class studentClass = new Class(classNum);
+                String info = this.studentManagement.assignCoursesToStudent(id, studentClass);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(info);
+
+            } catch (NumberFormatException ex) {
+                feedback.setText("Please enter valid numeric values for ID and Class.");
+                feedback.setTextFill(Color.FIREBRICK);
+            } catch (InputMismatchException ex) {
+                feedback.setText(ex.getMessage());
+                feedback.setTextFill(Color.FIREBRICK);
             }
         });
 
-        backbutton(tb1, stage);
+        backbutton(backBtn, stage);
     }
 
     public void viewAssignedCourses(Stage stage) {
-        Label l = new Label("View Assigned Courses:");
-        Label l2 = new Label("Enter the Student ID to view assigned courses:");
-        TextField text1 = new TextField();
+        Label title = new Label("View Assigned Courses");
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        title.setTextFill(Color.DARKBLUE);
 
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
+        Label idLabel = new Label("Student ID:");
+        TextField idField = new TextField();
+        idField.setPromptText("Enter Student ID");
 
-        GridPane pane2 = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(l,0,0);
-        pane2.add(l2, 0, 1);
-        pane2.add(text1, 1, 1);
-        pane2.add(tb, 2, 2);
-        pane2.add(tb1, 2, 4);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
+        Button submitBtn = new Button("Submit");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        submitBtn.setPrefWidth(120);
 
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(120);
 
-        Label add = new Label();
+        TextArea resultArea = new TextArea();
+        resultArea.setEditable(false);
+        resultArea.setWrapText(true);
+        resultArea.setPrefHeight(200);
+        resultArea.setFont(Font.font("Arial", 14));
 
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(text1.getText());
-            String info = this.studentManagement.viewAssignedCourses(id);
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.TOP_CENTER);
+        grid.setPadding(new Insets(30));
+        grid.setHgap(20);
+        grid.setVgap(20);
 
-            add.setText(info);
-            pane2.add(add, 2, 3);
-        });
+        grid.add(title, 0, 0, 2, 1);
+        grid.add(idLabel, 0, 1); grid.add(idField, 1, 1);
+        grid.add(submitBtn, 0, 2); grid.add(backBtn, 1, 2);
+        grid.add(resultArea, 0, 3, 2, 1);
 
-        backbutton(tb1,stage);
-    }
-    public void seeResult(Stage stage) {
-        Label result = new Label("Students Result");
-        Label see_grade = new Label("Enter Student Id to see result");
-        TextField t1 = new TextField();
-
-        Button tb = new Button("Submit");
-        Button tb1 = new Button("Back to Menu");
-
-        GridPane pane2 = new GridPane();
-        result.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane2.setAlignment(Pos.TOP_CENTER);
-        pane2.add(result,0,0);
-        pane2.add(see_grade, 0, 1);
-        pane2.add(t1, 1, 1);
-        pane2.add(tb, 3, 2);
-        pane2.add(tb1, 3, 20);
-        pane2.setVgap(5);
-        pane2.setHgap(5);
-
-        Scene s3 = new Scene(pane2, 700, 700);
-        setBackgroundColor(pane2);
-        stage.setScene(s3);
-
-        Label add = new Label();
-        pane2.add(add, 0, 3);
-        tb.setOnAction(submitEvent -> {
-            int id = Integer.parseInt(t1.getText());
-            Student student = this.studentManagement.getStudentById(id);
-
-            if (student != null) {
-                String info = this.studentManagement.viewAssignedCourses(id);
-
-                if (student.isNewStudent()) {
-                    add.setText("This student is a new admission");
-
-                } else {
-                    add.setText(info);
-
-                    Label mid_final = new Label("Mid-Term or Final-Term");
-                    RadioButton r1 = new RadioButton("Mid-Term");
-                    RadioButton r2 = new RadioButton("Final-Term");
-
-                    ToggleGroup tg1 = new ToggleGroup();
-                    r1.setToggleGroup(tg1);
-                    r2.setToggleGroup(tg1);
-                    Button b1 = new Button("Next");
-                    pane2.add(mid_final, 0, 7);
-                    pane2.add(r1, 1, 7);
-                    pane2.add(r2, 2, 7);
-                    pane2.add(b1, 3, 8);
-                    b1.setOnAction(b -> {
-                        Label m1 = new Label("Enter marks for course 1");
-                        TextField mt1 = new TextField();
-                        Label m2 = new Label("Enter marks for course 2");
-                        TextField mt2 = new TextField();
-                        Label m3 = new Label("Enter marks for course 3");
-                        TextField mt3 = new TextField();
-                        Label m4 = new Label("Enter marks for course 4");
-                        TextField mt4 = new TextField();
-                        Label m5 = new Label("Enter marks for course 5");
-                        TextField mt5 = new TextField();
-                        Label m6 = new Label("Enter marks for course 6");
-                        TextField mt6 = new TextField();
-                        Label m7 = new Label("Enter marks for course 7");
-                        TextField mt7 = new TextField();
-                        Label m8 = new Label("Enter marks for course 8");
-                        TextField mt8 = new TextField();
-                        Button calculateButton = new Button(r1.isSelected() ?
-                                "Calculate Mid-Term Results" : "Calculate Final Term Results");
-                        pane2.add(m1, 0, 9);
-                        pane2.add(mt1, 1, 9);
-                        pane2.add(m2, 0, 10);
-                        pane2.add(mt2, 1, 10);
-                        pane2.add(m3, 0, 11);
-                        pane2.add(mt3, 1, 11);
-                        pane2.add(m4, 0, 12);
-                        pane2.add(mt4, 1, 12);
-                        pane2.add(m5, 0, 13);
-                        pane2.add(mt5, 1, 13);
-                        pane2.add(m6, 0, 14);
-                        pane2.add(mt6, 1, 14);
-                        pane2.add(m7, 0, 15);
-                        pane2.add(mt7, 1, 15);
-                        pane2.add(m8, 0, 16);
-                        pane2.add(mt8, 1, 16);
-                        pane2.add(calculateButton, 2, 17);
-                        calculateButton.setOnAction(calculateEvent -> {
-                            Grade g = new Grade();
-                            g.setMarks1(Integer.parseInt(mt1.getText()));
-                            g.setMarks2(Integer.parseInt(mt2.getText()));
-                            g.setMarks3(Integer.parseInt(mt3.getText()));
-                            g.setMarks4(Integer.parseInt(mt4.getText()));
-                            g.setMarks5(Integer.parseInt(mt5.getText()));
-                            g.setMarks6(Integer.parseInt(mt6.getText()));
-                            g.setMarks7(Integer.parseInt(mt7.getText()));
-                            g.setMarks8(Integer.parseInt(mt8.getText()));
-                            boolean exceedMidtermLimit = g.getMarks1() > 50 || g.getMarks2() > 50 || g.getMarks3() > 50 || g.getMarks4() > 50 || g.getMarks5() > 50 || g.getMarks6() > 50 || g.getMarks7() > 50 || g.getMarks8() > 50;
-                            boolean exceedFinalTermLimit = g.getMarks1() > 100 || g.getMarks2() > 100 || g.getMarks3() > 100 || g.getMarks4() > 100 || g.getMarks5() > 100 || g.getMarks6() > 100 || g.getMarks7() > 100 || g.getMarks8() > 100;
-
-                            if (r1.isSelected() && exceedMidtermLimit) {
-                                showMarksErrorAlert("Midterm Marks");
-                            } else if (r2.isSelected() && exceedFinalTermLimit) {
-                                showMarksErrorAlert("Final Marks");
-                            } else {
-                                if (r1.isSelected()) {
-                                    g.setMidtermMarks();
-                                    addResultLabels(pane2,
-                                        String.valueOf(g.calculateMidtermPercentage()), g.getMidtermGrade(), 18);
-                                } if (r2.isSelected()) {
-                                    g.setFinalTermMarks();
-                                    addResultLabels(pane2,
-                                            String.valueOf(g.calculateFinalTermPercentage()), g.getFinalTermGrade(),
-                                            19);
-                                }
-                            }
-                        });
-                    });
-
-                }
-            }
-        });
-
-        backbutton(tb1,stage);
-    }
-    private void showMarksErrorAlert(String term) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Error");
-        alert.setHeaderText(null);
-        alert.setContentText("One or more individual marks for " + term + " exceed the limit.");
-        alert.showAndWait();
-    }
-    private void addResultLabels(GridPane pane, String percentage, String grade, int row) {
-        Label percentageLabel = new Label("Percentage: " + percentage);
-        Label gradeLabel = new Label("Grade: " + grade);
-
-        pane.add(percentageLabel, 0, row);
-        pane.add(gradeLabel, 1, row);
-    }
-    private void addBook(Stage stage) {
-        Label l = new Label("Adding a Book:");
-        Label titleLabel = new Label("Enter Title:");
-        TextField titleTextField = new TextField();
-
-        Label authorLabel = new Label("Enter Author:");
-        TextField authorTextField = new TextField();
-
-        Label isbnLabel = new Label("Enter ISBN:");
-        TextField isbnTextField = new TextField();
-
-        Button addButton = new Button("Add Book");
-        Button backButton = new Button("Back to Menu");
-
-        GridPane pane = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.add(l, 0, 0);
-        pane.add(titleLabel, 0, 1);
-        pane.add(titleTextField, 1, 1);
-        pane.add(authorLabel, 0, 2);
-        pane.add(authorTextField, 1, 2);
-        pane.add(isbnLabel, 0, 3);
-        pane.add(isbnTextField, 1, 3);
-        pane.add(addButton, 2, 4);
-        pane.add(backButton, 2, 6);
-        pane.setVgap(5);
-        pane.setHgap(5);
-
-        Scene scene = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
+        Scene scene = new Scene(grid, 700, 700);
+        setBackgroundColor(grid);
         stage.setScene(scene);
 
-        Label resultLabel = new Label();
-
-        addButton.setOnAction(event -> {
+        submitBtn.setOnAction(e -> {
             try {
-                String title = titleTextField.getText();
-                String author = authorTextField.getText();
-                int isbn = Integer.parseInt(isbnTextField.getText());
-
-                Book newBook = new Book(title, author, isbn, true);
-
-                String result = libraryManagement.addBook(newBook);
-
-                resultLabel.setText(result);
-                pane.add(resultLabel, 2, 5);
-            } catch (NumberFormatException e) {
-                resultLabel.setText("Invalid input. Please enter a numeric value for ISBN.");
-                pane.add(resultLabel, 2, 5);
+                int id = Integer.parseInt(idField.getText());
+                String info = this.studentManagement.viewAssignedCourses(id);
+                resultArea.setText(info);
+            } catch (NumberFormatException ex) {
+                resultArea.setText("Please enter a valid numeric Student ID.");
             }
         });
 
-        backbutton3(backButton,stage);
+        backbutton(backBtn, stage);
     }
-    private void assignBook(Stage stage) {
-        Label l = new Label("Assigning Book to Student:");
-        Label l2 = new Label("Enter Student ID:");
-        TextField studentIdTextField = new TextField();
 
-        Label l3 = new Label("Enter Book ISBN:");
-        TextField isbnTextField = new TextField();
+    public void seeResult(Stage stage) {
+        Label title = new Label("Students Result");
+        title.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        title.setTextFill(Color.DARKBLUE);
 
-        Button assignButton = new Button("Assign");
-        Button backButton = new Button("Back to Menu");
+        Label idLabel = new Label("Enter Student ID:");
+        TextField idField = new TextField();
+        idField.setPromptText("Student ID");
 
-        GridPane pane = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.add(l, 0, 0);
-        pane.add(l2, 0, 1);
-        pane.add(studentIdTextField, 1, 1);
-        pane.add(l3, 0, 2);
-        pane.add(isbnTextField, 1, 2);
-        pane.add(assignButton, 2, 3);
-        pane.add(backButton, 2, 5);
-        pane.setVgap(5);
-        pane.setHgap(5);
+        Label termLabel = new Label("Select Term:");
+        RadioButton midTerm = new RadioButton("Mid-Term");
+        RadioButton finalTerm = new RadioButton("Final-Term");
+        ToggleGroup termGroup = new ToggleGroup();
+        midTerm.setToggleGroup(termGroup);
+        finalTerm.setToggleGroup(termGroup);
+        HBox termBox = new HBox(15, midTerm, finalTerm);
+        termBox.setAlignment(Pos.CENTER_LEFT);
 
-        Scene scene3 = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
-        stage.setScene(scene3);
+        GridPane marksGrid = new GridPane();
+        marksGrid.setHgap(15);
+        marksGrid.setVgap(10);
 
-        Label resultLabel = new Label();
+        Button submitBtn = new Button("Submit");
+        submitBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        Button backBtn = new Button("Back to Menu");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        backBtn.setPrefWidth(120);
+        HBox buttonBox = new HBox(20, submitBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        assignButton.setOnAction(event -> {
+        TextArea resultArea = new TextArea();
+        resultArea.setEditable(false);
+        resultArea.setWrapText(true);
+        resultArea.setPrefHeight(150);
+        resultArea.setFont(Font.font("Arial", 14));
+
+        VBox mainLayout = new VBox(15, title, idLabel, idField, termLabel, termBox, marksGrid, buttonBox, resultArea);
+        mainLayout.setPadding(new Insets(30));
+        mainLayout.setAlignment(Pos.TOP_CENTER);
+        mainLayout.setStyle("-fx-background-color: #f0f8ff;");
+
+        Scene scene = new Scene(mainLayout, 700, 700);
+        setBackgroundColor(mainLayout);
+        stage.setScene(scene);
+
+        submitBtn.setOnAction(e -> {
             try {
-                int studentId = Integer.parseInt(studentIdTextField.getText());
-                int isbn = Integer.parseInt(isbnTextField.getText());
+                int id = Integer.parseInt(idField.getText());
+                Student student = this.studentManagement.getStudentById(id);
+
+                if (student == null) {
+                    resultArea.setText("Student not found.");
+                    return;
+                }
+
+                // Get class number based on number of courses assigned
+                int classNumber;
+                int courseCount = student.getCourses().size();
+                if (courseCount == 5) classNumber = 1;   // Classes 1-4
+                else classNumber = 5;                     // Classes 5-8
+
+                Class studentClass = new Class(classNumber);
+                ArrayList<Course1> courses = Course1.initializeCourses(studentClass);
+                Grade grade = new Grade(studentClass);
+
+                // Generate input fields for each course
+                marksGrid.getChildren().clear();
+                TextField[] marksFields = new TextField[courses.size()];
+                for (int i = 0; i < courses.size(); i++) {
+                    marksGrid.add(new Label(courses.get(i).getTitle() + ":"), 0, i);
+                    marksFields[i] = new TextField();
+                    marksFields[i].setPromptText("Enter marks for " + courses.get(i).getTitle());
+                    marksGrid.add(marksFields[i], 1, i);
+                }
+
+                submitBtn.setOnAction(ev -> {
+                    try {
+                        for (int i = 0; i < courses.size(); i++) {
+                            int mark = Integer.parseInt(marksFields[i].getText());
+                            grade.setMark(i, mark);
+                        }
+
+                        if (midTerm.isSelected()) {
+                            if (grade.hasInvalidMidTerm()) {
+                                resultArea.setText("Error: One or more Mid-Term marks exceed 50.");
+                            } else {
+                                grade.setMidtermMarks();
+                                resultArea.setText("Percentage: " + grade.calculateMidtermPercentage() +
+                                        "\nGrade: " + grade.getMidtermGrade());
+                            }
+                        } else if (finalTerm.isSelected()) {
+                            if (grade.hasInvalidFinalTerm()) {
+                                resultArea.setText("Error: One or more Final-Term marks exceed 100.");
+                            } else {
+                                grade.setFinalTermMarks();
+                                resultArea.setText("Percentage: " + grade.calculateFinalTermPercentage() +
+                                        "\nGrade: " + grade.getFinalTermGrade());
+                            }
+                        } else {
+                            resultArea.setText("Please select a term.");
+                        }
+
+                    } catch (NumberFormatException ex) {
+                        resultArea.setText("Please enter valid numeric marks.");
+                    }
+                });
+
+            } catch (NumberFormatException ex) {
+                resultArea.setText("Please enter a valid numeric Student ID.");
+            }
+        });
+
+        backbutton(backBtn, stage);
+    }
+
+
+
+    // -------------------------- Add Book --------------------------
+    private void addBook(Stage stage) {
+        Label heading = new Label("Add a New Book");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
+
+        Label titleLabel = new Label("Title:"); titleLabel.setFont(Font.font(16));
+        Label authorLabel = new Label("Author:"); authorLabel.setFont(Font.font(16));
+        Label isbnLabel = new Label("ISBN:"); isbnLabel.setFont(Font.font(16));
+
+        TextField titleField = new TextField(); titleField.setPrefWidth(250);
+        TextField authorField = new TextField(); authorField.setPrefWidth(250);
+        TextField isbnField = new TextField(); isbnField.setPrefWidth(250);
+
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20); formGrid.setVgap(15);
+        formGrid.add(titleLabel, 0, 0); formGrid.add(titleField, 1, 0);
+        formGrid.add(authorLabel, 0, 1); formGrid.add(authorField, 1, 1);
+        formGrid.add(isbnLabel, 0, 2); formGrid.add(isbnField, 1, 2);
+        formGrid.setAlignment(Pos.CENTER);
+
+        Button addBtn = new Button("Add Book");
+        addBtn.setStyle("-fx-background-color: darkgreen; -fx-text-fill: white;");
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        addBtn.setPrefWidth(120); backBtn.setPrefWidth(120);
+
+        HBox buttonBox = new HBox(20, addBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        Label feedback = new Label(); feedback.setWrapText(true);
+        feedback.setFont(Font.font(14)); feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400); feedback.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        addBtn.setOnAction(e -> {
+            try {
+                String title = titleField.getText();
+                String author = authorField.getText();
+                int isbn = Integer.parseInt(isbnField.getText());
+
+                Book book = new Book(title, author, isbn, true);
+                feedback.setTextFill(Color.DARKGREEN);
+                feedback.setText(libraryManagement.addBook(book));
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("ISBN must be a numeric value!");
+            }
+        });
+
+        backbutton3(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
+    }
+
+    // -------------------------- Assign Book --------------------------
+    private void assignBook(Stage stage) {
+        Label heading = new Label("Assign Book to Student");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
+
+        Label studentLabel = new Label("Student ID:"); studentLabel.setFont(Font.font(16));
+        Label isbnLabel = new Label("Book ISBN:"); isbnLabel.setFont(Font.font(16));
+
+        TextField studentField = new TextField(); studentField.setPrefWidth(250);
+        TextField isbnField = new TextField(); isbnField.setPrefWidth(250);
+
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20); formGrid.setVgap(15);
+        formGrid.add(studentLabel, 0, 0); formGrid.add(studentField, 1, 0);
+        formGrid.add(isbnLabel, 0, 1); formGrid.add(isbnField, 1, 1);
+        formGrid.setAlignment(Pos.CENTER);
+
+        Button assignBtn = new Button("Assign");
+        assignBtn.setStyle("-fx-background-color: royalblue; -fx-text-fill: white;");
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        assignBtn.setPrefWidth(120); backBtn.setPrefWidth(120);
+
+        HBox buttonBox = new HBox(20, assignBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
+
+        Label feedback = new Label(); feedback.setWrapText(true);
+        feedback.setFont(Font.font(14)); feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400); feedback.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        assignBtn.setOnAction(e -> {
+            try {
+                int studentId = Integer.parseInt(studentField.getText());
+                int isbn = Integer.parseInt(isbnField.getText());
 
                 boolean success = libraryManagement.checkoutBook(isbn, studentId);
-
-                if (success) {
-                    resultLabel.setText("Book assigned successfully.");
-                } else {
-                    resultLabel.setText("Failed to assign book. Please check student ID and book ISBN.");
-                }
-
-                pane.add(resultLabel, 2, 4);
-            } catch (NumberFormatException e) {
-                resultLabel.setText("Invalid input. Please enter numeric values for Student ID and Book ISBN.");
-                pane.add(resultLabel, 2, 4);
+                feedback.setTextFill(success ? Color.DARKGREEN : Color.RED);
+                feedback.setText(success ? "Book assigned successfully." : "Failed. Check Student ID or Book ISBN.");
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("Student ID and ISBN must be numeric!");
             }
         });
 
-        backbutton3(backButton,stage);
+        backbutton3(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
+    // -------------------------- Return Book --------------------------
     private void returnBook(Stage stage) {
-        Label l = new Label("Returning Book:");
-        Label l2 = new Label("Enter Book ISBN:");
-        TextField isbnTextField = new TextField();
+        Label heading = new Label("Return a Book");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        Button returnButton = new Button("Return");
-        Button backButton = new Button("Back to Menu");
+        Label isbnLabel = new Label("Book ISBN:"); isbnLabel.setFont(Font.font(16));
+        TextField isbnField = new TextField(); isbnField.setPrefWidth(250);
 
-        GridPane pane = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.add(l, 0, 0);
-        pane.add(l2, 0, 1);
-        pane.add(isbnTextField, 1, 1);
-        pane.add(returnButton, 2, 2);
-        pane.add(backButton, 2, 4);
-        pane.setVgap(5);
-        pane.setHgap(5);
+        GridPane formGrid = new GridPane();
+        formGrid.setHgap(20); formGrid.setVgap(15);
+        formGrid.add(isbnLabel, 0, 0); formGrid.add(isbnField, 1, 0);
+        formGrid.setAlignment(Pos.CENTER);
 
-        Scene scene3 = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
-        stage.setScene(scene3);
+        Button returnBtn = new Button("Return");
+        returnBtn.setStyle("-fx-background-color: darkred; -fx-text-fill: white;");
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;");
+        returnBtn.setPrefWidth(120); backBtn.setPrefWidth(120);
 
-        Label resultLabel = new Label();
+        HBox buttonBox = new HBox(20, returnBtn, backBtn);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        returnButton.setOnAction(event -> {
+        Label feedback = new Label(); feedback.setWrapText(true);
+        feedback.setFont(Font.font(14)); feedback.setTextFill(Color.DARKGREEN);
+        feedback.setMaxWidth(400); feedback.setAlignment(Pos.CENTER);
+
+        VBox layout = new VBox(30, heading, formGrid, buttonBox, feedback);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
+
+        returnBtn.setOnAction(e -> {
             try {
-                int isbn = Integer.parseInt(isbnTextField.getText());
-
+                int isbn = Integer.parseInt(isbnField.getText());
                 boolean success = libraryManagement.returnBook(isbn);
-
-                if (success) {
-                    resultLabel.setText("Book returned successfully.");
-                } else {
-                    resultLabel.setText("Failed to return book. Please check the book ISBN.");
-                }
-
-                pane.add(resultLabel, 2, 3);
-            } catch (NumberFormatException e) {
-                resultLabel.setText("Invalid input. Please enter a numeric value for Book ISBN.");
-                pane.add(resultLabel, 2, 3);
+                feedback.setTextFill(success ? Color.DARKGREEN : Color.RED);
+                feedback.setText(success ? "Book returned successfully." : "Failed. Check the Book ISBN.");
+            } catch (NumberFormatException ex) {
+                feedback.setTextFill(Color.RED);
+                feedback.setText("ISBN must be numeric!");
             }
         });
 
-        backbutton3(backButton, stage);
+        backbutton3(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
+    // -------------------------- Display Available Books --------------------------
     private void displayAvailableBooks(Stage stage) {
-        Label l = new Label("Displaying Available Books:");
-        Button backButton = new Button("Back to Menu");
+        Label heading = new Label("Available Books");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        GridPane pane = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.add(l, 0, 0);
-        pane.add(backButton, 2, 1);
-        pane.setVgap(5);
-        pane.setHgap(5);
+        TextArea booksArea = new TextArea(libraryManagement.displayAvailableBooks());
+        booksArea.setWrapText(true); booksArea.setEditable(false);
 
-        Scene scene3 = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
-        stage.setScene(scene3);
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;"); backBtn.setPrefWidth(120);
 
-        Label availableBooksLabel = new Label(libraryManagement.displayAvailableBooks());
-        pane.add(availableBooksLabel, 0, 1);
+        VBox layout = new VBox(30, heading, booksArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        backbutton3(backButton, stage);
+        backbutton3(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
+
+    // -------------------------- Display Checked Out Books --------------------------
     private void displayCheckedOutBooks(Stage stage) {
-        Label l = new Label("Displaying Checked Out Books:");
-        Button backButton = new Button("Back to Menu");
+        Label heading = new Label("Checked Out Books");
+        heading.setFont(Font.font("Arial", FontWeight.BOLD, 26));
+        heading.setTextFill(Color.DARKBLUE);
 
-        GridPane pane = new GridPane();
-        l.setFont(Font.font("Times New Roman", FontWeight.BOLD, 25));
-        pane.setAlignment(Pos.TOP_CENTER);
-        pane.add(l, 0, 0);
-        pane.add(backButton, 2, 1);
-        pane.setVgap(5);
-        pane.setHgap(5);
+        TextArea booksArea = new TextArea(libraryManagement.displayCheckedOutBooks());
+        booksArea.setWrapText(true); booksArea.setEditable(false);
 
-        Scene scene3 = new Scene(pane, 700, 700);
-        setBackgroundColor(pane);
-        stage.setScene(scene3);
+        Button backBtn = new Button("Back");
+        backBtn.setStyle("-fx-background-color: gray; -fx-text-fill: white;"); backBtn.setPrefWidth(120);
 
-        Label checkedOutBooksLabel = new Label(libraryManagement.displayCheckedOutBooks());
-        pane.add(checkedOutBooksLabel, 0, 1);
+        VBox layout = new VBox(30, heading, booksArea, backBtn);
+        layout.setPadding(new Insets(30));
+        layout.setAlignment(Pos.TOP_CENTER);
+        layout.setStyle("-fx-background-color: #f0f8ff;");
 
-        backbutton3(backButton, stage);
+        backbutton3(backBtn, stage);
+        stage.setScene(new Scene(layout, 700, 700));
     }
-    public void setBackgroundColor(GridPane pane) {
-        BackgroundFill backgroundFill2 = new BackgroundFill(Color.DARKGRAY, null, null);
-        Background background2 = new Background(backgroundFill2);
-        pane.setBackground(background2);
+
+
+    public void setBackgroundColor(Pane pane) {
+        // Light gray background with padding and subtle corners
+        BackgroundFill backgroundFill = new BackgroundFill(Color.LIGHTGRAY, new CornerRadii(10), Insets.EMPTY);
+        Background background = new Background(backgroundFill);
+        pane.setBackground(background);
     }
+
     public void backbutton(Button tb1, Stage stage) {
-        tb1.setOnAction(backEvent -> {
-            stage.setScene(studentscene);
-        });
+        tb1.setOnAction(backEvent -> stage.setScene(studentscene));
     }
     public void backbutton2(Button tb1, Stage stage) {
-        tb1.setOnAction(backEvent -> {
-            stage.setScene(staffscene);
-        });
+        tb1.setOnAction(backEvent -> stage.setScene(staffscene));
     }
     public void backbutton3(Button tb1, Stage stage) {
-        tb1.setOnAction(backEvent -> {
-            stage.setScene(libraryscene);
-        });
+        tb1.setOnAction(backEvent -> stage.setScene(libraryscene));
     }
+
 }

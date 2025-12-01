@@ -13,3 +13,21 @@ Mother Contact: 98765433
 Father Business: Business
 Father Income: 500000.0
 Father Email: ahsan@gmail.com
+Name: Haleema Usman
+Age: 13
+ID: 4
+CNIC: 3541238901
+Gender: Female
+Contact Info: 3211234568
+Email: haleema@gmail.com
+Address: Bahria Town Lahore
+Father Name: Usman Khan
+Mother Name: Rabia Usman
+Father Contact: 3214567812
+Mother Contact: 3412345678
+Father Business: Property Dealer
+Father Income: 10000.0
+Father Email: Usman@gmail.com
+78,Jojo,12,123456789,Female,123456789,erdftvgybhjn,sdxfcgv hb,erdfcgvhb,edrtfgvh,23456789,987654,erdcfgv,10000.0,esrdtfvghb
+77,newww,14,213456789,Female,12345678,new@gmail,mnjhbgvtfrd,ewsdfcgv,edrtfgvh,987654,12345678,erdtfvg,10000.0,serdftgyh
+23,New admission,13,2134567890,Male,9876543,fdxrtfgyhb, vcfgtyghb,cfdrtfg,vcfrtygh,9876543,2345678,hgftryg,10000.0,vbhbjy

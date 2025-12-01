@@ -13,8 +13,7 @@ public class StudentManagement {
 
         students.add(new Student("Asher", 12,9,123456,true,876543,
                 "asher@email.com" , "104 House lahore" , "Kashif" , "Aleena",
-                45678,8765432, "Sales Person", 11000.0, "father@email.com" ,
-                false));
+                45678,8765432, "Sales Person", 11000.0, "father@email.com"));
     }
 
     public void admitStudent(Student student) {

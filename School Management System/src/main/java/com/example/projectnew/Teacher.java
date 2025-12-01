@@ -7,6 +7,15 @@ import java.util.Scanner;
 public class Teacher extends Person implements Serializable {
     private String qualification;
     private int experience_years;
+
+    public boolean isCertificate() {
+        return certificate;
+    }
+
+    public boolean isMartial_status() {
+        return martial_status;
+    }
+
     private boolean certificate;
     private boolean martial_status;
 

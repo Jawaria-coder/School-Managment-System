@@ -11,10 +11,8 @@ public class Fee {
     }
 
     public double StudentFee(Student student) {
-        if (student.isNewStudent()) {
+        {
             return baseFee + securityFee + admissionFee;
-        } else {
-            return baseFee + securityFee;
         }
     }
 }
